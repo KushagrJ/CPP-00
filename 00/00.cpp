@@ -1,4 +1,5 @@
 // C++20 Standard
+// This program doesn't include input validation.
 
 #include <iostream>
 
@@ -52,6 +53,7 @@ int main()
    in these trivia/notes.
    Similarly, some terms which have the same definitions in C and C++ may not be
    defined in these trivia/notes.
+
 
  * Every C++ program contains one or more functions, one of which must be named
    main, generally.
@@ -127,8 +129,8 @@ int main()
    of a 'header file'.
    Header files typically contain class declarations, function prototypes,
    enumerations, etc.
-   The preprocessor directive #include <iostream> makes that line replaced by
-   the contents of the header file iostream.
+   The preprocessor directive #include <iostream> makes that line get replaced
+   by the contents of the header file named iostream.
 
 
  * An expression yields a result/value and is usually composed of one or more
@@ -137,7 +139,7 @@ int main()
    Here, the expression std::cout << "Enter two numbers: ", for eg., consists of
    the operands std::cout and "Enter two numbers: ", and the operator <<.
  * The left hand operand of the << operator must be an ostream object, and the
-   right hand operand must be value to write. The << operator writes the given
+   right hand operand must be a value to write. The << operator writes the given
    value on the given ostream object. The value of this expression is the left
    hand operand.
  * The left hand operand of the >> operator must be an istream object, and the
@@ -149,8 +151,8 @@ int main()
 
  * A 'string literal' is a sequence of characters enclosed in double quotes.
 
- * std::endl (a special value called a 'manipulator') can also be used instead
-   of '\n' or "\n" to print a newline character.
+ * std::endl (an example of a 'manipulator') can also be used instead of '\n' or
+   "\n" to print a newline character.
    The difference between std::endl and '\n' or "\n" is that std::endl flushes
    the output buffer, whereas '\n' and "\n" don't. Thus, std::cout << std::endl;
    is equivalent to std::cout << '\n' << std::flush; or
