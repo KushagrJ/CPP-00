@@ -49,9 +49,9 @@ int main()
    [Annex C.5 of the C++20 Standard lists the differences between C++ and C]
  * This means that the majority of the concepts that are applicable for C are
    also applicable for C++.
- * So, some concepts which are directly applicable for C and C++ may be skipped
-   in these trivia/notes.
-   Similarly, some terms which have the same definitions in C and C++ may not be
+ * So, many concepts which are directly applicable for C and C++ are skipped in
+   these trivia/notes.
+   Similarly, many terms which have the same definitions in C and C++ are not
    defined in these trivia/notes.
 
 

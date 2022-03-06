@@ -38,15 +38,13 @@ int main()
 
 /* Trivia - 01.cpp
 
- * Some concepts/terms common to C and C++ may not be explained/defined here.
+ * Many concepts/terms common to C and C++ are not explained/defined here.
 
 
  * Statements normally execute sequentially. The first statement in a block is
    executed first, followed by the second, and so on.
    Programming languages also provide various flow-of-control statements that
    allow for more complicated execution paths. For eg., while, for & do while.
-
- * Like C, all non-zero values are considered to be true in C++.
 
 
  * When an istream is used as a condition (or when an istream variable is cast
@@ -96,12 +94,35 @@ int main()
  * When input extraction fails, two things happen: the input data is left in the
    input buffer (if any), and std::cin goes into 'failure' mode.
    Once in failure mode, future requests for input extraction silently fail.
-   std::cin.fail() and !(std::cin) return true if the previous extraction
+   std::cin.fail() and !(std::cin) both return true if the previous extraction
    failed.
    std::cin.clear() puts std::cin back into 'normal' mode.
- * A failed extraction due to invalid input causes the variable to be set to
-   0, 0.0, "", or whatever value 0 converts to for that type.
- * Since an extraction may fail due to incorrect input, and not due to EOF
+ * A failed extraction due to invalid input causes that variable for which the
+   extraction failed to be set to 0, 0.0, "", or whatever value 0 converts to
+   for that type.
+   If another extraction is attempted using std::cin after failure has already
+   occurred in a previous extraction attempt, the input data is again left in
+   the input buffer (if any), but the variable isn't set to 0.
+   For eg.,
+   (1) int x = 100, y = 100, z = 100;
+       std::cin >> x;
+       std::cout << x << ' ';
+       std::cin >> y;
+       std::cout << y << ' ';
+       getchar();
+       std::cin >> z;
+       std::cout << z << ' ';
+       // If 1.2 is given as input to the above program, the output is 1 0 100.
+   (2) int x = 100, y = 100, z = 100;
+       scanf("%d", &x);
+       std::cout << x << ' ';
+       scanf("%d", &y);
+       std::cout << y << ' ';
+       getchar();
+       scanf("%d", &z);
+       std::cout << z << ' ';
+       // If 1.2 is given as input to the above program, the output is 1 100 2.
+ * Since an extraction may also fail due to incorrect input, and not due to EOF
    getting triggered, there is another flag related to std::cin which checks
    whether EOF was encountered.
    if (!(std::cin >> x))
