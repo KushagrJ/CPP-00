@@ -42,6 +42,9 @@ int main()
    object 'occupies' a region of storage.
  * The term 'variable' (in relation with objects and identifiers) exists in C++,
    but not in C.
+   C++ programmers tend to refer to variables as 'variables' or 'objects'
+   interchangeably. Some programmers distinguish between named and unnamed
+   objects, using the term variable to refer to named objects only.
 
  * C++ is nearly exactly a superset of C95.
    With very few exceptions, every valid C95 program is also a valid C++ program

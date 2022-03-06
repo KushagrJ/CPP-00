@@ -45,6 +45,9 @@ int main()
    are statically typed, i.e. type checking is done at compile time. As a
    consequence, the compiler must know the type of every name used in the
    program.
+   Static type checking can help find bugs easily, as if the programmer tries to
+   do things that the type does not support, the compiler generates error
+   messages and does not produce an executable file.
 
  * C lets programmers define types (using structures) that specify only what
    data make up the type.
@@ -129,8 +132,114 @@ int main()
    For eg., when a non-bool value is used as a condition, the arithmetic value
    is converted to bool in the same way that it would be converted had that
    arithmetic value been assigned to a bool variable.
-   [Similar type conversion rules as that in C are applicable for C++ as well]
+   [Similar type conversion rules as that in C are applicable for C++ as well,
+    such as char expressions being promoted to int ones, etc.]
 
- * Resume from 2.1.3 Literals
+ * A constant expression such as 41, 012, 0x23, 5.7, 'A', true, false, nullptr,
+   etc. is known as a literal.
+   [An expression has a type and evaluates to a value. Expressions, values and
+    objects all have types.]
+ * By default, decimal literals are signed, whereas octal and hexadecimal
+   literals can be either signed or unsigned.
+   A decimal literal has the smallest type of int, long or long long.
+   An octal/hexadecimal literal has the smallest type of int, unsigned int,
+   long, unsigned long, long long or unsigned long long.
+ * By default, floating-point literals have type double.
+ * The prefixes u, U, L and u8 can be used for char16_t, char32_t, wchar_t and
+   char string literals, respectively.
+ * The suffixes u/U, l/L, ll/LL, f/F and l/L can be used for unsigned, long,
+   long long, float and long double literals, respectively.
+   For eg., an integer literal with a U suffix has the smallest type of unsigned
+   int, unsigned long and unsigned long long in which the literal's value fits.
+ * The value of a literal is never negative. For eg., in -42, the minus sign is
+   not part of the literal. The minus sign is an operator that negates the value
+   of its operand.
+
+ * A character enclosed within single quotes is a literal of type char.
+   The type of a char literal/expression is promoted to int when used.
+ * Zero or more characters enclosed in double quotation marks is a string
+   literal. The type of a string literal is array of constant chars. The
+   compiler appends a null character ('\0') to every string literal. Thus, the
+   actual size of a string literal is one more than its apparent size.
+
+ * Other than the escape sequences \n, \v, \\, \r, \t, \b, \?, \\f, \a, \" and
+   \', we can also use our own generalized escape sequences.
+   This can be done by writing \ followed by one, two or three octal digits, or
+   \x followed by one or more hexadecimal digits.
+   For eg., '\12' is the same as '\n', '\x4d' is the same as 'M', and so on.
+   [When a character, including escape sequences, is part of a string of
+    characters enclosed in double quotes, it should not be enclosed in single
+    quotes]
+   [If a \ is followed by more than 3 octal digits, only the first three are
+    associated with the \.
+    In contrast, \x uses up all the hex digits following it.]
+
+ * It is possible to initialize a variable to the value of one defined earlier
+   in the same definition. For eg., int i = 1, j = (i * 2);
+ * Initialization is not assignment. Initialization happens when a variable is
+   given a value when it is created. Assignment obliterates an object's current
+   value and replaces that value with a new one.
+ * For eg., any of the following four different ways can be used to define an
+   int variable named x and initialize it to 10:
+   int x = 10;
+   int x = {10};
+   int x{10};
+   int x(10);
+   [The generalized form of curly braces for initialization is referred to as
+    'list initialization']
+ * When used with variables of built-in types, list initialization has one
+   important property: the compiler will not let the user initialize variables
+   of built-in types if the initializer might lead to the loss of information.
+   For eg., long double ld = 3.14;
+            int a{ld}, b = {ld}; // error
+            int c(ld), d = ld; // ok, but value will be truncated
+ * When a variable is defined without an initializer, the variable is 'default
+   initialized'. Such variables are given the default value. What that default
+   value is depends on the type of the variable and may also depend on where the
+   variable is defined.
+ * Variables of built-in types defined outside of any function body are
+   initialized to zero.
+   Static variables of built-in types defined inside a function are also
+   initialized to zero.
+   Automatic variables of built-in types defined inside a function are
+   uninitialized. The value of an uninitialized variable is undefined. Undefined
+   behaviour gets invoked when the value of an uninitialized variable is
+   accessed.
+ * Each class controls how objects of that class type can be initialized. In
+   particular, it is up to the class whether objects of that type can be
+   defined without an initializer. If they can, the class determines what value
+   the resulting object will have.
+   For eg., the string class (not a built-in type) says that if an initializer
+   is not supplied, the resulting string is the empty string.
+ * Some classes require that every object be explicitly initialized. The
+   compiler will complain if an object is tried to be created of such a class
+   with no initializer.
+
+ * When a program is split into multiple files, a way is needed to share code
+   across those files. For eg., code defined in one file may need to use a
+   variable defined in another file. As a concrete example, std::cout and
+   std::cin are objects defined somewhere in the standard library, yet the
+   programs can use these objects.
+ * To support such separate compilation, C++ distinguishes between declarations
+   and definitions of variables, functions, etc., much like C.
+   A 'declaration' makes a name known to a program. A file that wants to use a
+   name defined elsewhere includes a declaration for that name.
+   A 'definition' creates the associated entity.
+ * A variable declaration specifies the type and name of the variable.
+   A variable definition, in addition to specifying the type and name of the
+   variable, allocates storage and may provide the variable with an initial
+   value.
+   For eg., extern int i; // declares, but doesn't define i
+            int j; // declares and defines j
+            int k = 1; // declares and defines k
+            extern int l = 1; // declares and defines l (extern gets overriden)
+   [It is an error to provide an initializer on an extern inside a function]
+ * Variables and functions must be defined exactly once, but can be declared
+   many times.
+   To use the same variable/function across files in a multi-file program, that
+   variable/function must be defined in one and only one file. Other files that
+   use that variable/function must declare (but not define) that variable.
+
+ * Resume from 2.2.3 Identifiers
 
  * End of Trivia */
