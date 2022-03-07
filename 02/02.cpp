@@ -173,6 +173,8 @@ int main()
    [If a \ is followed by more than 3 octal digits, only the first three are
     associated with the \.
     In contrast, \x uses up all the hex digits following it.]
+   For eg., std::cout << '\113'; prints K
+            std::cout << "\x32\115\xa"; prints 2M followed by a newline.
 
  * It is possible to initialize a variable to the value of one defined earlier
    in the same definition. For eg., int i = 1, j = (i * 2);
@@ -240,6 +242,267 @@ int main()
    variable/function must be defined in one and only one file. Other files that
    use that variable/function must declare (but not define) that variable.
 
- * Resume from 2.2.3 Identifiers
+ * Identifiers (i.e. names given to objects/variables (as the terms 'object' and
+   'variable' are used interchangeably), functions, etc.) are arbitrarily long
+   sequences of letters, digits and the underscore character.
+ * C++ imposes no limit on the length of an identifier.
+ * Identifiers must begin with a either a letter or an underscore.
+ * Identifiers are case-sensitive.
+ * Reserved keywords can't be used as names of identifiers. For eg., alignas,
+   alignof, asm, auto, bool, break, case, catch, char, char16_t, char32_t,
+   class, const, constexpr, const_cast, continue, decltype, default, delete,
+   do, double, dynamic_cast, else, enum, explicit, export, extern, false, float,
+   for, friend, goto, if, inline, int, long, mutable, namespace, new, noexcept,
+   nullptr, operator, private, protected, public, register, reinterpret_cast,
+   return, short, signed, sizeof, static, static_assert, static_cast, struct,
+   switch, template, this, thread_local, throw, true, try, typedef, typeid,
+   typename, union, unsigned, using, virtual, void, volatile, wchar_t, while,
+   and, and_eq, bitand, bitor, compl, not, not_eq, or, or_eq, xor and xor_eq.
+ * The C++ standard also reserves a set of names for use in the standard
+   library. The identifiers we define in our own programs must not contain two
+   consecutive underscores, and they must not begin with an underscore followed
+   immediately by an uppercase letter. In addition, identifiers defined outside
+   a function must not begin with an underscore.
+   Using such identifers invokes undefined behaviour. The compilers aren't
+   required to issue warnings or errors for the usage of such identifiers.
+ * For eg., an identifier designating / referring to an object / a varible is a
+   convenient name given to that object/variable.
+   Thus, the term 'name of an identifier' is meaningless, as an identifier is
+   itself a name.
+
+ * A 'scope' is a part of the program in which a name has a particular meaning.
+   Most scopes in C++ are delimited by curly braces.
+ * The same name can refer to different entities in different scopes.
+   Names are visible from the point where they are declared until the end of the
+   scope in which the declaration appears.
+ * For eg.,
+   #include <iostream>
+   int main()
+   {
+       int sum = 0;
+       for (int val = 1; val <= 10; (val)++)
+           sum += val;
+       std::cout << sum << std::endl;
+       return 0;
+   }
+   The name 'main' is defined outside any curly braces, and thus has 'global'
+   scope. Once declared, names at the global scope are accessible throughout
+   the program.
+   The name 'sum' is defined within the scope of the block that is the body of
+   main(), and thus has 'block' scope. It is accessible from its point of
+   declaration throughout the rest of the main() function, but not outside.
+   The name 'val' is defined in the scope of the for statement, and thus also
+   has 'block scope'. It can be used only inside that for statement, and not
+   elsewhere in main() or outside main().
+ * Scopes can contain other scopes. The nested scope is referred to as an
+   'inner' scope and the containing scope is called the 'outer' scope.
+   Once a name has been declared in a scope, that name can be used by any scopes
+   nested inside that scope.
+ * Names declared in the outer scope can also be redefined in an inner scope.
+   For eg.,
+   #include <iostream>
+   int i = 42;
+   int main()
+   {
+       std::cout << i << ' ';
+       int i = 10;
+       std::cout << i << ' ';
+       std::cout << ::i << ' ';
+       return 0;
+   }
+   This program prints 42 10 42.
+   [The scope operator (::) can be used to override the default scoping rules.
+    The global scope has no name. Hence, when the operator has an empty
+    left-hand side, it is a request to fetch the name on the right-hand side
+    from the global scope.]
+ * It is almost always a bad idea to define an inner scope variable with the
+   same name as an outer scope variable.
+ * As always, using global variables is a bad idea, unless that variable is
+   const-qualified.
+
+ * Built-in types are also known as primitive/fundamental types.
+ * A 'compound' type is a type that is defined in terms of another type
+   (built-in or compound). For eg., arrays, functions (return type and types of
+   parameters), pointers, references, classes, etc. are all compound types.
+ * Any type that is not a built-in type is a compound type.
+
+ * A 'declaration' is a base type (built-in or compound) followed by a list of
+   'declarators'. Each declarator names a variable and gives the variable a type
+   that is related to the base type.
+   [Every definition is a declaration as well]
+ * An 'lvalue reference', or simply 'reference', defines an alternative name
+   for an object. A reference type 'refers to' another type. A reference must be
+   initialized upon its declaration.
+   For eg., int i = 42; int& ref_i = i;
+ * Ordinarily, when we initialize a variable, the value of the initializer is
+   copied into the object we are creating. When we define a reference, instead
+   of copying the initializer's value, we 'bind' the reference to its
+   initializer.
+ * Once initialized, a reference remains bound to its initial object. There is
+   no way to rebind a reference to refer to a different object.
+ * After a reference is bound, all operations on that reference are actually
+   operations on the object to which the reference is bound.
+ * Because references are not objects, we can't define a reference to a
+   reference.
+ * Thus, in simple terms, a reference is just another name for an already
+   existing object.
+ * With two exceptions, the type of a reference and the object to which the
+   reference refers must match exactly.
+   Exception 1 - We can bind a reference-to-const to a non-const object,
+                 a literal, or a more general expression that can be converted
+                 to the original type.
+                 For eg., int& r = 3.14 // error
+                          const int& r = 3.14; // ok; a 'temporary object' will
+                                                  be created to store 3
+   [In such cases, because the underlying object might be non-const, it might be
+    changed by other means]
+   Exception 2 - We can bind a reference to a base-class type to an object of a
+                 type derived from that base class.
+
+ * A 'pointer' type is a compound type that 'points to' another type.
+   [Same logic as C applies to C++ as well regarding pointers]
+   [See https://stackoverflow.com/questions/57483 - What are the differences
+    between a pointer variable and a reference variable in C++?]
+ * With two exceptions, the type of a pointer and the object to which the
+   pointer points must match exactly.
+   Exception 1 - We can use a pointer-to-const to point to a non-const object.
+   [In such cases, because the underlying object might be non-const, it might be
+    changed by other means]
+   Exception 2 - We can use a pointer to a base-class type to point to an object
+                 of a type derived from that base class.
+ * The value stored in a pointer variable can be in one of four states -
+   (1) It can be the address of an object.
+   (2) It can be the address of the location just immediately past the end of an
+       object.
+   (3) It can be a null pointer, indicating that it isn't the address of any
+       object.
+   (4) It can be invalid; values other than the preceding 3 are invalid.
+   [The result of accessing an invalid pointer is that undefined behaviour gets
+    invoked]
+   [Although pointers in cases 2 and 3 are valid, we must not use them to access
+    the (supposed) object to which the pointer points (undefined behaviour)]
+ * There are several ways to obtain a null pointer -
+   int* p1 = nullptr;
+   int* p2 = 0;
+   int* p3 = NULL; // must #include <cstdlib>
+ * The type void* is a special pointer type that can hold the address of any
+   object. Like any other pointer, a void* pointer holds an address, but the
+   type of the object at that address is unknown.
+
+ * We can make a variable unchangeable by defining the variable's type as
+   'const'. Because we can't change the value of a const object after we create
+   it, it must be initialized upon creation, just like references.
+ * By default, const objects are local to a file. Thus, to share a const object
+   among multiple files, we must define the const variable as extern.
+ * A reference to a const cannot be used to change the object to which the
+   reference is bound.
+   There is no such thing as a const reference, as a reference is not an object.
+ * A pointer to a const cannot be used to change the object to which the pointer
+   points, but the pointer itself may be made to point elsewhere.
+   A const pointer cannot be made to point elsewhere, but may be used to change
+   the object to which the pointer points.
+ * The term 'top-level const' is used to indicate that the pointer itself is
+   const. When a pointer can point to a const object, we refer to that const as
+   a 'low-level const'.
+   [More generally, top-level const indicates that an object itself is const.
+    Low-level const is applicable to types such as pointers and references.]
+
+ * A constant expression is an expression whose value cannot change and that can
+   be evaluated at compile time. A literal is a constant expression. A const
+   object that is initialized from a constant expression is also a constant
+   expression (as opposed to in C, where a const object is not a constant
+   expression, even if it is initialized from a constant expression).
+   For eg., int i = 10; // i is not a constant expression even though it is
+                        // initialized from a constant expression, as the value
+                        // of i may change during program execution
+            const int j = get_size(); // j is again not a constant expression
+                                      // even though it is const-qualified, as
+                                      // the value of the initializer is not
+                                      // known until run time
+ * We can ask the compiler to verify whether a variable is a constant expression
+   by declaring the variable in a 'constexpr' declaration.
+   For eg., constexpr i = 20;
+            constexpr j = i + 1;
+            constexpr k = size(); // ok only if size() is a constexpr function
+ * constexpr imposes a top-level const on the objects it is used with.
+   Thus, in const int* p;, p is a pointer to const, whereas in
+   constexpr int* q;, q is a constant pointer.
+
+ * A 'type alias' is a name that is a synonym for another type.
+   We can define a type alias by using 'typedef' or 'using'.
+   For eg., typedef int* ptr_int;
+            using ptr_int = int*;
+ * typedef char* ptr_char;
+   const ptr_char p;
+   const ptr_char* q;
+   Here, p is a constant pointer to char, and not a pointer to const char.
+   It may seem like p should be a pointer to const char (as if we were to simply
+   replace the alias like const char* p, p would be a pointer to const char),
+   but it is not the case.
+   Similarly, q is a non-constant pointer to a constant pointer to char.
+   [These kinds of type aliases and declarations should generally not be used,
+    in order to avoid confusion]
+
+ * We can let the compiler figure out the type of a variable for us by using the
+   'auto' type specifier.
+   C++ doesn't allow the usage of 'auto' as a storage class specifier, unlike C.
+ * A variable that uses auto as its type specifier must be initialized upon
+   creation, just like const variables and references.
+ * For eg., auto i = j + k; // the type of i will become whatever the resulting
+                            // type of (j + k) is
+ * When defining multiple variables using auto, the initializers for all the
+   variables in the declaration must have types that are consistent with each
+   other.
+   For eg., auto i = 0, * p = &i; // ok
+            auto j = 0, k = 3.14; // error
+            auto l = 0, m = 'a'; // error, since auto i = 'a' makes the type of
+                                 // i equal to char (not int)
+ * When we use a reference as an initializer, the initializer is the
+   corresponding object. Thus, for eg., int i = 0, & r = i; auto x = r; makes
+   the type of x equal to int.
+ * auto ordinarily ignores top-level consts, but keeps low-level consts.
+   If we want the deduced type to have a top-level const, we must say so
+   explicitly, like const auto i = j;
+ * We can also specify that we want a reference to an auto deduced type (auto&).
+   Top-level consts are not ingnored in this case.
+
+ * The 'decltype' type specifier returns the type of its operand. The compiler
+   analyzes the expression to determine its type, but does not evaluate the
+   expression itself.
+   For eg., decltype(f()) sum; // sum has whatever type f() returns
+   Here, f() is not evaluated.
+ * When we apply decltype to a simple variable, decltype returns the type of
+   that variable, including top-level const and references.
+   For eg., const int i = 0, & j = i;
+            decltype(i) x = 0; // x has type const int
+            decltype(j) y = x; // y has type const int& and is bound to x
+   Thus, decltype is the only context in which a variable defined as a reference
+   is not treated as a synonym for the object to which it refers.
+ * When the expression to which we apply decltype is not simply a variable, we
+   get the type that the expression yields.
+   decltype returns a reference type (intead of the type itself) for expressions
+   that yield objects that can stand on the left-hand side of assignment (=).
+   For eg., int i = 42, * p = &i, & r = i;
+            decltype(i) returns int
+            decltype(r) returns int&
+            decltype(r + 10) returns int since r + 10 doesn't yield an object
+                             that can stand on the left-hand side of =
+            decltype(p) returns int*
+            decltype(*p) returns int& instead of int, since *p yields an
+                         object that can stand on the left-hand side of =
+ * When we apply decltype to a variable without any parentheses, we get the type
+   of that variable. But, if we wrap the variable's name in one or more sets of
+   parentheses, the compiler will treat it as an expression as not being simply
+   a variable, and will consequently yield a reference.
+   For eg., int i = 0, & j = i;
+            decltype(i) returns int
+            decltype((i)) returns int&
+            decltype(j) returns int&
+            decltype((j)) also returns int&, since (j) is treated as an
+                          expression and (j) now corresponds to the bound object
+                          whose type is int and can stand on the left-hand side
+                          of =
+            [j not being treated as a synonym for i is only applicable for
+             decltype(j), and not for decltype((j))]
 
  * End of Trivia */
