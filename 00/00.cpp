@@ -168,9 +168,11 @@ int main()
    the program crashed.
 
  * The prefix 'std::' indicates that the names cout, cin and endl are defined
-   inside the 'namespace' named 'std' (:: is the scope operator).
+   inside the 'namespace' named 'std' (:: is the scope resolution operator).
    Namespaces allow us to avoid inadvertent collisions between the names we
    define and uses of those same names inside a library.
    All the names defined by the standard library are in the std namespace.
+ * The scope resolution operator is basically used to tell the compiler what
+   'namespace' or what 'class' something belongs to.
 
  * End of Trivia */
