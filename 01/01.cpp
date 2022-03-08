@@ -476,7 +476,10 @@ int main()
    Exception 1 - We can bind a reference-to-const to a non-const object,
                  a literal, or a more general expression that can be converted
                  to the original type.
-                 For eg., int& r = 3.14 // error
+                 For eg., int& r = 3; // error
+                          const int& r = 3; // ok; a 'temporary object' will be
+                                            // created to store 3
+                          int& r = 3.14; // error
                           const int& r = 3.14; // ok; a 'temporary object' will
                                                   be created to store 3
    [In such cases, because the underlying object might be non-const, it might be

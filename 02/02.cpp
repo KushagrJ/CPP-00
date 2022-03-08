@@ -144,4 +144,52 @@ int main()
                                              // associativity of +
             string s7 = "hello" + ", " + s2 // error
 
+ * The functions prototyped in the <cctype> header file can be used to process
+   characters, such as isalnum(c), isalpha(c), iscntrl(c), isdigit(c),
+   isgraph(), islower(c), isprint(c), ispunct(c), isspace(c), isupper(c),
+   isxdigit(c), tolower(c) and toupper(c).
+
+ * The range-based for statement can be used to process every character in a
+   string.
+   For eg., for (char c : s) // or for (auto c : s)
+                std::cout << c << std::endl;
+            In each iteration, the variable c is created and initialized with
+            the value of the next element in s, even if c is changed in between
+            by other means.
+            For eg., for (char c : s)
+                     {
+                         std::cout << c << ' ';
+                         c = 'a';
+                         std::cout << c << ' ';
+                     }
+                     This will print h a e a l a l a o a, if s is hello.
+ * For eg., for (char& c : s) // or for (auto& c : s)
+                c = 'a';
+            Here, in each iteration, the variable c is created and bound to the
+            the next element in s.
+   This works similar to how int& j = i; binds j to i, whereas int j = i; copies
+   the value of i into j.
+
+ * The subscript operator ([]) takes an std::string::size_type value (called the
+   index/subscript) when used with strings. It denotes the position of the
+   character we want to access and technically returns a reference to the
+   character at the given position.
+   For eg., char c = s[3]; copies the value of s[3] into c, whereas
+   char& c = s[3]; binds c to s[3].
+   [Here, 3 is implicitly converted from int to std::string::size_type]
+   [Thus, generally, it can also be said that a variable returns a reference to
+    that object. For eg., in the case of int j = i;, the reference returned by i
+    is simply used to copy the contents of i into j, but in the case of
+    int& j = i;, the reference returned by i is used to bind the name 'j' to
+    the object designated by the name 'i'.]
+ * String indices begin at 0 and go upto (s.size() - 1).
+   The result of using an out of range index is that undefined behaviour gets
+   invoked. By implication, subscripting an empty string invokes undefined
+   behaviour.
+   To avoid such issues, the range-based for statement is generally used to
+   process characters in a string.
+
+
+ * Resume from 3.3 Library vector type
+
  * End of Trivia */
