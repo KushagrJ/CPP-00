@@ -250,6 +250,12 @@ int main()
    arithmetic value been assigned to a bool variable.
    [Similar type conversion rules as that in C are applicable for C++ as well,
     such as char expressions being promoted to int ones, etc.]
+ * For eg., short i = 1, j = 2; sizeof i returns the size of short, whereas
+                                sizeof (i + j) returns the size of int.
+            char i = 'a', j = 'b'; sizeof i returns the size of char, whereas
+                                   sizeof (i + j) returns the size of int.
+   Thus, i by itself isn't promoted to int, as it isn't 'used' in an expression
+   in these cases. But, (i + j) makes i and j both typecast to int.
 
  * A constant expression such as 41, 012, 0x23, 5.7, 'A', true, false, nullptr,
    etc. is known as a literal.
@@ -460,6 +466,9 @@ int main()
    operations on the object to which the reference is bound.
  * Because references are not objects, we can't define a reference to a
    reference.
+   For eg., int i; int& ref_i_1 = i; int& ref_i_2 = ref_i_1;
+            Here, in the third statement, ref_i_1 becomes a synonym for i,
+            i.e. int& ref_i_2 = ref_i_1 is the same as int& ref_i_2 = i;
  * Thus, in simple terms, a reference is just another name for an already
    existing object.
  * With two exceptions, the type of a reference and the object to which the
@@ -573,6 +582,7 @@ int main()
             auto j = 0, k = 3.14; // error
             auto l = 0, m = 'a'; // error, since auto i = 'a' makes the type of
                                  // i equal to char (not int)
+            auto p = 0, q = 'a' + 'b'; // ok
  * When we use a reference as an initializer, the initializer is the
    corresponding object. Thus, for eg., int i = 0, & r = i; auto x = r; makes
    the type of x equal to int.
