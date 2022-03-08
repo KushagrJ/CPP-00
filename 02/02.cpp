@@ -58,7 +58,8 @@ int main()
    is defined in the std namespace.
  * A library type is almost always more efficient to use than an equivalent
    user-defined type, because in addition to specifying the operations that the
-   library types provide, the standard also imposes efbuffer
+   library types provide, the standard also imposes efficiency requirements on
+   implementors.
 
  * Common ways to initialize strings :-
    (1) string s1; // default initialization; s1 is the empty string ""
@@ -88,10 +89,12 @@ int main()
    (7) s1 + s2 // returns a string that is the concatenation of the strings
                // s1 and s2
    (8) s1 = s2 // replaces the characters in the string s1 with a copy of the
-               // string s2
+               // characters in the string s2
    (9) s1 == s2 // the strings s1 and s2 are equal if they are the same length
        s1 != s2 // and contain the same characters (equality is case-sensitive)
  * <, <=, > and >= comparisons are case sensitive and use dictionary ordering.
+
+ * non-const std::string's are mutable, but string literals are not.
 
  * As explained before, is >> s is used to read input from the is stream,
    storing what is read in s, by discarding leading whitespaces and stopping at
@@ -143,6 +146,9 @@ int main()
             string s6 = s1 + ", " + "world"; // ok, due to left to right
                                              // associativity of +
             string s7 = "hello" + ", " + s2 // error
+   ['a' + 'b' is integer arithmetic.
+    "hello" + 'a' is pointer arithmetic.
+    "hello" + "world" is an error.]
 
  * The functions prototyped in the <cctype> header file can be used to process
    characters, such as isalnum(c), isalpha(c), iscntrl(c), isdigit(c),
@@ -171,9 +177,9 @@ int main()
    the value of i into j.
 
  * The subscript operator ([]) takes an std::string::size_type value (called the
-   index/subscript) when used with strings. It denotes the position of the
+   index/subscript) when used with strings. It denotes the index of the
    character we want to access and technically returns a reference to the
-   character at the given position.
+   character at the given index.
    For eg., char c = s[3]; copies the value of s[3] into c, whereas
    char& c = s[3]; binds c to s[3].
    [Here, 3 is implicitly converted from int to std::string::size_type]
@@ -190,6 +196,106 @@ int main()
    process characters in a string.
 
 
- * Resume from 3.3 Library vector type
+ * A 'vector' is a variable-length sequence of objects, all of which have the
+   same type. To use the vector ADT (which is defined as a class template, and
+   not simply a class), we must include the 'vector' header. Because the vector
+   library is part of the standard library, the name 'vector' is defined in the
+   std namespace.
+ * A vector is also referred to as a 'container' because it contains other
+   objects.
+ * C++ has both 'class templates' and 'function templates'.
+   Writing a template requires a fairly deep understanding of C++.
+ * Templates are not themselves classes or functions. Instead, they can be
+   thought of as instructions to the compiler for generating classes or
+   functions. The process that the compiler uses to create classes or functions
+   from templates is called 'instantiation'.
+ * The term 'generic programming' indicates code that is not specific to a
+   particular type, but which, once a type is specified, can be translated into
+   code for that type.
+ * C++ lets the user create generic algorithms in the form of templates that the
+   compiler can then use to instantiate code automatically for a specified type.
+ * When we use a template, we specify what kind of class or function we want the
+   compiler to instantiate.
+   For the class template vector, we supply the type of the object the vector
+   will hold inside a pair of angle brackets following the template's name.
+   For eg., std::vector<int> v;
+            std::vector<std::vector<string>> v;
+ * A container cannot hold array objects, as the type of the elements to be
+   stored in a container must be both copy-able and assignable.
+   Arrays are neither.
+   So, unless the arrays are wrapped into structs, or unless std::array's are
+   used, a vector of arrays cannot be created.
+
+ * Common ways to initialize vectors :-
+   (1) vector<T> v1; // default initialization; s1 is empty
+   (2) vector<T> v2 = v1; // v2 has a copy of each element in v1
+   (3) vector<T> v2(v1); // v2 has a copy of each element in v1
+   (4) vector<T> v3 = {a, b, c, ...}; // v3 has as many elements as there are
+                                      // initializers; elements are initialized
+                                      // by corresponding initializers
+   (5) vector<T> v3{a, b, c, ...}; // v3 has as many elements as there are
+       [a, b, c, ... are in        // initializers; elements are initialized
+        {}, and not in ()]         // by corresponding initializers
+   (6) vector<T> v4(n, val); // v4 has n elements with value val
+   (7) vector<T> v4(n); // v4 has n copies of a value-initialized object
+ * A value-initialized object means that the library creates a
+   value-initialized element initializer for us. The value of the element
+   initializer depends on the type of of the elements stored in the vector.
+   If the vector holds elements of a built-in type, such as int, then the
+   element initializer has a value of 0. If the elements are of a class type,
+   such as string, then the element initializer is default initialized.
+   It should again be noted that some classes require that we always supply
+   an explicit initializer.
+ * vector<int> v1(10); // v1 has 10 integers, each with value 0
+   vector<int> v2{10}; // v2 has 1 integer with value 10
+   vector<int> v3(10, 1); // v3 has 10 integers, each with value 1
+   vector<int> v4{10, 1}; // v4 has 2 integers with values 10 and 1
+
+ * Common vector operations :-
+   (1) v.empty() // returns true if the vector v is empty, false otherwise
+   (2) v.size() // returns the number of elements in the vector v
+   (3) v.push_back(t) // adds an element with the value t to the end of the
+                      // vector v
+   (4) v[n] // returns the element at the index n in the vector v (technically a
+            // reference to the element at the index n)
+   (5) v1 = v2 // replaces the elements in the vector v1 with a copy of the
+               // elements in the vector v2
+   (6) v1 = {a, b, c, ...} // replaces the elements in the vector v1 with a copy
+                           // of the elements in the comma-separated list
+   (7) v1 == v2 // the vectors v1 and v2 are equal if they are the same length
+       v1 != v2 // and contain the same elements
+ * <, <=, > and >= comparisons use dictionary ordering.
+   [We can compare two vectors only if we can compare the elements in those
+    vectors, i.e. if we use a vector of a user-defined class in which the
+    comparison operations are not defined, then we cannot compare two such
+    vectors]
+
+ * The range-based for statement can be used to process every element in a
+   vector as well.
+ * The body of a range-based for must not change the size of the sequence over
+   which it is iterating.
+   For eg., the body of a range-based for must not add elements to a vector.
+
+ * The subscript operator ([]) takes an std::vector<T>::size_type value (called
+   the index/subscript) when used with vectors. It denotes the index of the
+   element we want to access and technically returns a reference to the
+   element at the given index.
+   For eg., int i = v[3]; copies the value of v[3] into i, whereas
+   int& i = v[3]; binds i to v[3].
+   [Here, 3 is implicitly converted from int to std::vector<T>::size_type]
+   [Thus, generally, it can also be said that a variable returns a reference to
+    that object. For eg., in the case of int j = i;, the reference returned by i
+    is simply used to copy the contents of i into j, but in the case of
+    int& j = i;, the reference returned by i is used to bind the name 'j' to
+    the object designated by the name 'i'.]
+ * Vector indices begin at 0 and go upto (v.size() - 1).
+   The result of using an out of range index is that undefined behaviour gets
+   invoked. By implication, subscripting an empty vector invokes undefined
+   behaviour.
+   To avoid such issues, the range-based for statement is generally used to
+   process elements in a vector.
+
+
+ * Resume from 3.4 Introducing Iterators
 
  * End of Trivia */

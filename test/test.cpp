@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cstdio>
+#include <vector>
 
 
 int main()
