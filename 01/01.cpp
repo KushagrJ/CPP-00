@@ -442,11 +442,13 @@ int main()
  * As always, using global variables is a bad idea, unless that variable is
    const-qualified.
 
+
  * Built-in types are also known as primitive/fundamental types.
  * A 'compound' type is a type that is defined in terms of another type
    (built-in or compound). For eg., arrays, functions (return type and types of
    parameters), pointers, references, classes, etc. are all compound types.
  * Any type that is not a built-in type is a compound type.
+
 
  * A 'declaration' is a base type (built-in or compound) followed by a list of
    'declarators'. Each declarator names a variable and gives the variable a type
@@ -487,6 +489,7 @@ int main()
    Exception 2 - We can bind a reference to a base-class type to an object of a
                  type derived from that base class.
 
+
  * A 'pointer' type is a compound type that 'points to' another type.
    [Same logic as C applies to C++ as well regarding pointers]
    [See https://stackoverflow.com/questions/57483 - What are the differences
@@ -517,6 +520,7 @@ int main()
    object. Like any other pointer, a void* pointer holds an address, but the
    type of the object at that address is unknown.
 
+
  * We can make a variable unchangeable by defining the variable's type as
    'const'. Because we can't change the value of a const object after we create
    it, it must be initialized upon creation, just like references.
@@ -534,6 +538,7 @@ int main()
    a 'low-level const'.
    [More generally, top-level const indicates that an object itself is const.
     Low-level const is applicable to types such as pointers and references.]
+
 
  * A constant expression is an expression whose value cannot change and that can
    be evaluated at compile time. A literal is a constant expression. A const
@@ -570,6 +575,7 @@ int main()
    Similarly, q is a non-constant pointer to a constant pointer to char.
    [These kinds of type aliases and declarations should generally not be used,
     in order to avoid confusion]
+
 
  * We can let the compiler figure out the type of a variable for us by using the
    'auto' type specifier.
@@ -633,6 +639,7 @@ int main()
                           of =
             [j not being treated as a synonym for i is only applicable for
              decltype(j), and not for decltype((j))]
+
 
  * At the most basic level, a 'data structure' is a way to group together
    related data elements and a strategy for using those data.
