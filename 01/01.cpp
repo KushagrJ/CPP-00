@@ -173,8 +173,8 @@ int main()
    that operate on the data (like in C), programs are organised around the data
    itself (like in C++).
 
- * C++ defines a set of primitive types that include the arithmetic types and a
-   special type named 'void'.
+ * C++ defines a set of primitive/fundamental types that include the arithmetic
+   types and a special type named 'void'.
    The arithmetic types represent characters, integers, boolean values and
    floating-point numbers.
    The void type has no associated values and can be used in only a few
@@ -227,7 +227,7 @@ int main()
  * When a floating-point value is assigned to an object of integral type, the
    value is truncated. The value that is stored is the part before the decimal
    point.
-   For eg., i = 3.14;   // i has value
+   For eg., i = 3.14;   // i has value 3
  * When an integral value is assigned to an object of floating-point type, the
    fractional part is zero. Precision may be lost if the integer has more bits
    than the floating-point object can accomodate.
@@ -333,7 +333,7 @@ int main()
    particular, it is up to the class whether objects of that type can be
    defined without an initializer. If they can, the class determines what value
    the resulting object will have.
-   For eg., the string class (not a built-in type) says that if an initializer
+   For eg., the string class (a compound type) says that if an initializer
    is not supplied, the resulting string is the empty string.
  * Some classes require that every object be explicitly initialized. The
    compiler will complain if an object is tried to be created of such a class
@@ -387,7 +387,7 @@ int main()
    a function must not begin with an underscore.
    Using such identifers invokes undefined behaviour. The compilers aren't
    required to issue warnings or errors for the usage of such identifiers.
- * For eg., an identifier designating / referring to an object / a varible is a
+ * For eg., an identifier designating / referring to an object / a variable is a
    convenient name given to that object/variable.
    Thus, the term 'name of an identifier' is meaningless, as an identifier is
    itself a name.
@@ -457,7 +457,8 @@ int main()
  * An 'lvalue reference', or simply 'reference', defines an alternative name
    for an object. A reference type 'refers to' another type. A reference must be
    initialized upon its declaration.
-   For eg., int i = 42; int& ref_i = i;
+   For eg., int i = 42;
+            int& ref_i = i;
  * Ordinarily, when we initialize a variable, the value of the initializer is
    copied into the object we are creating. When we define a reference, instead
    of copying the initializer's value, we 'bind' the reference to its
@@ -573,7 +574,7 @@ int main()
    replace the alias like const char* p, p would be a pointer to const char),
    but it is not the case.
    Similarly, q is a non-constant pointer to a constant pointer to char.
-   [These kinds of type aliases and declarations should generally not be used,
+   [These kinds of type aliases and definitions should generally not be used,
     in order to avoid confusion]
 
 
@@ -585,9 +586,10 @@ int main()
  * For eg., auto i = j + k; // the type of i will become whatever the resulting
                             // type of (j + k) is
  * When defining multiple variables using auto, the initializers for all the
-   variables in the declaration must have types that are consistent with each
-   other.
+   variables in the definition must have base types that are consistent with
+   each other.
    For eg., auto i = 0, * p = &i; // ok
+            [This works similar to how int i = 0, * p = &i; works]
             auto j = 0, k = 3.14; // error
             auto l = 0, m = 'a'; // error, since auto i = 'a' makes the type of
                                  // i equal to char (not int)
@@ -981,10 +983,10 @@ int main()
    vector reallocates itself, just like realloc() in C. It should be noted that
    in such a case, all the previously saved pointers (and iterators, discussed
    below) will become invalidated.
- * For vectors such as std::vector<string>, the size of a string stored in a
-   string object is not fixed. Thus, 'contiguity' in this case doesn't mean that
-   the first character of the second string is stored immediately after the last
-   character of the first string, and so on, but instead it means that the
+ * For vectors such as std::vector<string>, the size of the string belonging to
+   a string object is not fixed. Thus, 'contiguity' in this case doesn't mean
+   that the first character of the second string is stored immediately after the
+   last character of the first string, and so on, but instead it means that the
    vector of strings will store each string object contiguously in memory (heap,
    generally), where a string object consists of a char* to the actual string
    stored elsewhere in memory (heap, generally), alongwith some extra
@@ -1028,6 +1030,9 @@ int main()
    data members, such as a pointer to a dynamically allocated array of int's in
    memory (heap, generally), plus some extra variables to keep track of the size
    and capacity of the vector.
+
+
+ * Additional std::string and std::vector operations will be discussed later.
 
 
  * Although we can use subscripts / pointers / range-based for statements to
@@ -1168,7 +1173,7 @@ int main()
    after each operation that changes the sequence.
 
 
- * Array is a compound type (not an ADT).
+ * Array is a compound type.
    Like vectors, arrays are containers of unnamed objects of a single type that
    we access by position.
    Unlike vectors, arrays have fixed size.
@@ -1212,7 +1217,7 @@ int main()
  * In C++, arrays decay to pointers in most contexts, just like in C.
    In C, the exceptions to this decay are when the array expression appears as
    an operand of either the &, the sizeof or the alignof operators, or when it
-   is a string literal being used as an initializer in a declaration.
+   is a string literal being used as an initializer in a definition.
    In C++, a few more exceptions are applicable, such as when an array is passed
    by reference or assigned to a reference variable, used with decltype, etc.
  * For eg., int a[10]; auto b(a); makes the type of b int*, not int[10].
@@ -1241,6 +1246,10 @@ int main()
    One distinction is that when the subscript operator is used with pointers,
    it can also take negative values.
    For eg., int a[10]; int* p = a; p += 4; p[-2] = 3;
+   This is because once an array is defined, the array name cannot be used to
+   designate any other object. But, pointers can be made to point to other
+   objects of the same type. So, when the subscript operator is used with
+   pointers, the index can be a signed integer.
 
  * Although C++ supports C-style strings, they should not be used by C++
    programs, as they are a rich source of bugs and much harder to use than
