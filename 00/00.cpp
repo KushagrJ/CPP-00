@@ -58,6 +58,16 @@ int main()
    defined in these trivia/notes.
 
 
+ * An 'algorithm' is a well-defined computational procedure that takes some
+   value(s) as input and produces some value(s) as output in a finite amount of
+   time.
+   Alternatively, an 'algorithm' is a finite sequence of well-defined steps to
+   be followed in order to accomplish a given task.
+ * A 'data structure' is a way to store and organize data in order to facilitate
+   access and modifications. Using the appropriate data structure(s) is an
+   important part of algorithm design.
+
+
  * Every C++ program contains one or more functions, one of which must be named
    main, generally.
  * It is not possible to write a program without using the main() function,
@@ -86,23 +96,23 @@ int main()
    back to the function's caller.
    When a return statement includes a value, the value returned must have a type
    that is compatible with the return type of the function.
-   On most systems, the value returned from main is a status indicator to the
+   On most systems, the value returned from main() is a status indicator to the
    operating system. A return value of 0 indicates success. A nonzero return has
    a meaning that is defined by the system.
    On Unix systems, after executing a program, 'echo $?' can be used to check
-   the value returned by main to the operating system.
+   the value returned by main() to the operating system.
  * In C++, main() can only be entered and left once, whereas in C, re-entering
    main() is allowed, but should be avoided.
 
  * A 'type' defines both the contents of a data element and the operations that
    are possible on those data.
    When the type of a variable named 'v' is 'T', we often say that 'v' has type
-   'T', or, interchangeably, that 'v is a T'.
+   'T', or, interchangeably, that 'v' is a 'T'.
 
 
  * Just like C, the C++ language doesn't define any statements to do input or
    output (I/O).
-   Instead, C and C++ include an extensive 'standard libary' that provides I/O,
+   Instead, C and C++ include extensive standard libaries that provide I/O,
    and many other facilities.
    The C++ standard library is basically a collection of classes and functions.
    [STL (Standard Template Library) is a different term]
@@ -130,7 +140,7 @@ int main()
    used in this program.
    The name inside the angle brackets, i.e. iostream in this case, is the name
    of a 'header file'.
-   Header files typically contain class declarations, function prototypes,
+   Header files typically contain class definitions, function prototypes,
    enumerations, etc.
    The preprocessor directive #include <iostream> makes that line get replaced
    by the contents of the header file named iostream.
@@ -138,7 +148,8 @@ int main()
 
  * An expression yields a result/value and is usually composed of one or more
    operands and operators.
-   [For eg., x, 4, -6, 4+21, a*(b+c/d)/20, q = 5*2, x = ++q % 3, q > 3, etc.]
+   [For eg., x, 4, -6, 4 + 21, a * (b + c / d) / 20, q = 5 * 2, x = ++q % 3,
+    q > 3, etc.]
    Here, the expression std::cout << "Enter two numbers: ", for eg., consists of
    the operands std::cout and "Enter two numbers: ", and the operator <<.
  * The left hand operand of the << operator must be an ostream object, and the
@@ -153,6 +164,9 @@ int main()
    equivalent to (std::cout << "Hello") << "World";.
 
  * A 'string literal' is a sequence of characters enclosed in double quotes.
+   For eg., "kushagr" is a string literal consisting of the characters 'k', 'u',
+   's', 'h', 'a', 'g', 'r' and '\0', and sizeof "kushagr" evaluates to 8.
+
 
  * std::endl (an example of a 'manipulator') can also be used instead of '\n' or
    "\n" to print a newline character.
@@ -160,12 +174,26 @@ int main()
    the output buffer, whereas '\n' and "\n" don't. Thus, std::cout << std::endl;
    is equivalent to std::cout << '\n' << std::flush; or
    std::cout << "\n" << std::flush;.
-   [In C, output is sent from stdout to the screen when a newline character is
-    encountered, among other cases]
+   [The exact rules for automatic buffer flushing are dependent on the type of
+    buffering used and are also implementation-defined.
+    For eg., in most implementation of C/C++, stdout/cout is automatically
+    flushed when there is impending input from stdin/cin.]
  * When debugging, programmers often add print statements. Such statements
    should always flush the output buffer. Otherwise, if the program crashes,
    output may be left in the buffer, leading to incorrect inferences about where
    the program crashed.
+ * Stream buffering is done to aid performance. For eg., writing to a file, as
+   opposed to writing to a screen, is a costly operation. Thus, it is often
+   better to wait until the content to be written to a file reaches a particular
+   size before writing to the file.
+   So, using '\n' or "\n" when working with files is better than using std::endl
+   frequently.
+ * As another example, if a program is set to print messages after fixed
+   intervals of time, it is better to flush the output buffer after every print
+   operation in order to ensure that the messages appear on the screen after
+   fixed intervals of time, instead of all the messages appearing on the screen
+   at once when the output buffer is eventually flushed later.
+
 
  * The prefix 'std::' indicates that the names cout, cin and endl are defined
    inside the 'namespace' named 'std' (:: is the scope resolution operator).

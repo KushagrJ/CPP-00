@@ -9,6 +9,9 @@
 int main()
 {
 
+    std::vector<int> v;
+    printf("%d\n", v.size());
+
     return 0;
 
 }

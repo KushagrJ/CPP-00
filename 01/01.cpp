@@ -94,15 +94,17 @@ int main()
  * When input extraction fails, two things happen: the input data is left in the
    input buffer (if any), and std::cin goes into 'failure' mode.
    Once in failure mode, future requests for input extraction silently fail.
-   std::cin.fail() and !(std::cin) both return true if the previous extraction
-   failed.
+   std::cin.fail() and !(std::cin) both return true if std::cin is in failure
+   mode.
    std::cin.clear() puts std::cin back into 'normal' mode.
- * A failed extraction due to invalid input causes that variable for which the
+ * A failed extraction due to invalid input causes the input data to be left in
+   the input buffer (if any) and the value of that variable for which the
    extraction failed to be set to 0, 0.0, "", or whatever value 0 converts to
    for that type.
    If another extraction is attempted using std::cin after failure has already
-   occurred in a previous extraction attempt, the input data is again left in
-   the input buffer (if any), but the variable isn't set to 0.
+   occurred in an earlier extraction attempt and if std::cin is still in failure
+   mode, then the input data is again left in the input buffer (if any), but the
+   corresponding variable's value isn't set to 0.
    For eg.,
    (1) int x = 100, y = 100, z = 100;
        std::cin >> x;
@@ -122,8 +124,8 @@ int main()
        scanf("%d", &z);
        std::cout << z << ' ';
        // If 1.2 is given as input to the above program, the output is 1 100 2.
- * Since an extraction may also fail due to incorrect input, and not due to EOF
-   getting triggered, there is another flag related to std::cin which checks
+ * Since an extraction may fail due to incorrect input, and not due to EOF
+   getting encountered, there is another flag related to std::cin which checks
    whether EOF was encountered.
    if (!(std::cin >> x))
    {
@@ -219,7 +221,7 @@ int main()
      run-time cost.
 
  * When one of the non-bool arithmetic types is assigned to a bool object, the
-   result is false if the value if 0 and true otherwise.
+   result is false if the value is 0 and true otherwise.
    For eg., bool b = 42;   // b is true
  * When a bool is assigned to one of the other arithmetic types, the resulting
    value is 1 if the bool is true and 0 if the bool is false.
@@ -249,7 +251,7 @@ int main()
    is converted to bool in the same way that it would be converted had that
    arithmetic value been assigned to a bool variable.
    [Similar type conversion rules as that in C are applicable for C++ as well,
-    such as char expressions being promoted to int ones, etc.]
+    such as char expressions being promoted to int ones when used, etc.]
  * For eg., short i = 1, j = 2; sizeof i returns the size of short, whereas
                                 sizeof (i + j) returns the size of int.
             char i = 'a', j = 'b'; sizeof i returns the size of char, whereas
@@ -333,7 +335,7 @@ int main()
    particular, it is up to the class whether objects of that type can be
    defined without an initializer. If they can, the class determines what value
    the resulting object will have.
-   For eg., the string class (a compound type) says that if an initializer
+   For eg., the std::string class (a compound type) says that if an initializer
    is not supplied, the resulting string is the empty string.
  * Some classes require that every object be explicitly initialized. The
    compiler will complain if an object is tried to be created of such a class
@@ -362,13 +364,14 @@ int main()
    many times.
    To use the same variable/function across files in a multi-file program, that
    variable/function must be defined in one and only one file. Other files that
-   use that variable/function must declare (but not define) that variable.
+   use that variable/function must declare (but not define) that
+   variable/function.
 
  * Identifiers (i.e. names given to objects/variables (as the terms 'object' and
    'variable' are used interchangeably), functions, etc.) are arbitrarily long
    sequences of letters, digits and the underscore character.
  * C++ imposes no limit on the length of an identifier.
- * Identifiers must begin with a either a letter or an underscore.
+ * Identifiers must begin with either a letter or an underscore.
  * Identifiers are case-sensitive.
  * Reserved keywords can't be used as names of identifiers. For eg., alignas,
    alignof, asm, auto, bool, break, case, catch, char, char16_t, char32_t,
@@ -439,7 +442,7 @@ int main()
     from the global scope.]
  * It is almost always a bad idea to define an inner scope variable with the
    same name as an outer scope variable.
- * As always, using global variables is a bad idea, unless that variable is
+ * As always, using global variables is a bad idea, unless those variables are
    const-qualified.
 
 
@@ -503,12 +506,12 @@ int main()
    Exception 2 - We can use a pointer to a base-class type to point to an object
                  of a type derived from that base class.
  * The value stored in a pointer variable can be in one of four states -
-   (1) It can be the address of an object.
+   (1) It can be the starting address of an object.
    (2) It can be the address of the location just immediately past the end of an
        object.
    (3) It can be a null pointer, indicating that it isn't the address of any
        object.
-   (4) It can be invalid; values other than the preceding 3 are invalid.
+   (4) It can be invalid - values other than the preceding 3 are invalid.
    [The result of accessing an invalid pointer is that undefined behaviour gets
     invoked]
    [Although pointers in cases 2 and 3 are valid, we must not use them to access
@@ -555,9 +558,9 @@ int main()
                                       // known until run time
  * We can ask the compiler to verify whether a variable is a constant expression
    by declaring the variable in a 'constexpr' declaration.
-   For eg., constexpr i = 20;
-            constexpr j = i + 1;
-            constexpr k = size(); // ok only if size() is a constexpr function
+   For eg., constexpr int i = 20;
+            constexpr int j = i + 1;
+            constexpr int k = size(); // ok only if size() is a constexpr func
  * constexpr imposes a top-level const on the objects it is used with.
    Thus, in const int* p;, p is a pointer to const, whereas in
    constexpr int* q;, q is a constant pointer.
@@ -576,6 +579,7 @@ int main()
    Similarly, q is a non-constant pointer to a constant pointer to char.
    [These kinds of type aliases and definitions should generally not be used,
     in order to avoid confusion]
+   [In general, type aliases should not be used on pointer types]
 
 
  * We can let the compiler figure out the type of a variable for us by using the
@@ -643,8 +647,6 @@ int main()
              decltype(j), and not for decltype((j))]
 
 
- * At the most basic level, a 'data structure' is a way to group together
-   related data elements and a strategy for using those data.
  * As mentioned before, in C++, we define our own data types by defining
    classes. The libraries string, istream and ostream are all defined as
    classes.
@@ -669,6 +671,7 @@ int main()
        unsigned units_sold = 0;
        double revenue = 0.0;
    };
+
    Book_Data book1, book2;
 
    Here, as opposed to C structs, we don't need to write struct Book_Data book1,
@@ -708,11 +711,28 @@ int main()
 
 
  * Built-in/fundamental/primitive types - int, char, float, etc.
-   Compound types - array, pointer, reference, etc.
-   Abstract data types - string, vector, linked list, stack, queue, etc.
+   Compound types - array, pointer, reference, class, etc.
  * Arrays are not built-in types.
    Arrays are compound types, and the term 'built-in' is an informal name for a
    fundamental type.
+
+ * An abstract data type (ADT) is simply the description of a type. But, once
+   that type has been implemented in a language, it no longer remains an ADT,
+   and rather becomes concrete.
+   So, the idea of an integer type is an ADT, but the type int is not an ADT and
+   is rather a fundamental type.
+   Similarly, the idea of a string/vector type is an ADT, but the type
+   std::string/std::vector<int> is not an ADT and is rather a compound type,
+   defined as a class / instantiated from a class template.
+ * So, the definition of an ADT which says that an ADT is a type whose
+   implementation details are hidden from the user is not fully correct.
+ * Simply put, a formal abstract description of a type's properties and of the
+   operations that can be performed on the type is called an ADT.
+   This description shouldn't be tied to any particular implementation or
+   programming language.
+ * cppreference.com clearly indicates that there are only two kinds of types in
+   C++, namely 'fundamental' and 'compound'. Thus, any ADT, when implemented,
+   becomes either a fundamental type or a compound type.
 
  * The safest way to use names from a namespace without qualifying the names
    with namespace_name:: prefixes is by using 'using declarations'.
@@ -729,8 +749,9 @@ int main()
    pollution problem.
 
 
- * A 'string' is a variable-length sequence of characters. To use the string
-   ADT (which is defined as a class), we must include the 'string' header.
+ * A 'string' in C++ is a variable-length sequence of characters. To use the
+   std::string compound type (which is defined as a class), we must include the
+   'string' header.
    Because the string library is part of the standard library, the name 'string'
    is defined in the std namespace.
  * A library type is almost always more efficient to use than an equivalent
@@ -738,19 +759,19 @@ int main()
    library types provide, the standard also imposes efficiency requirements on
    implementors.
 
- * Common ways to initialize strings :-
-   (1) string s1; // default initialization; s1 is the empty string ""
-   (2) string s2 = s1; // s2 is a copy of s1
-   (3) string s2(s1); // s2 is a copy of s1
-   (4) string s3 = "hello"; // s3 is a copy of the string literal "hello",
-                            // excluding the null character
-   (5) string s3("hello"); // s3 is a copy of the string literal "hello",
-                           // excluding the null character
-   (6) string s4(5, 'c'); // s4 is "ccccc"
- * string s5 = string(5, 'c'); creates a temporary object (string) of the given
-   size and character value and then copies that value into s5.
+ * Common ways to initialize an std::string :-
+   (1) std::string s1; // default initialization; s1 is the empty string ""
+   (2) std::string s2 = s1; // s2 is a copy of s1
+   (3) std::string s2(s1); // s2 is a copy of s1
+   (4) std::string s3 = "hello"; // s3 is a copy of the string literal "hello",
+                                 // excluding the null character
+   (5) std::string s3("hello"); // s3 is a copy of the string literal "hello",
+                                // excluding the null character
+   (6) std::string s4(5, 'c'); // s4 is "ccccc"
+ * std::string s5 = std::string(5, 'c'); creates a temporary std::string object
+   of the given size and character value and then copies that value into s5.
 
- * Common string operations :-
+ * Common std::string operations :-
    (1) os << s // writes the string s onto the ostream object os
    (2) is >> s // reads a string from the istream object is into the string s
    (3) getline(is, s) // reads a line of input from the istream object is into
@@ -776,34 +797,34 @@ int main()
  * As explained before, is >> s is used to read input from the is stream,
    storing what is read in s, by discarding leading whitespaces and stopping at
    the first whitespace after non-whitespace characters.
-   Thus, If Hello World! is given as input to an is >> s, only Hello would get
+   Thus, if Hello World! is given as input to an is >> s, only Hello would get
    stored in s with no extra whitespaces. The remaining part, that is one space
-   character followed by World! would remain in the input buffer (or stream).
+   character followed by World!\n would remain in the input buffer of is.
  * while (is >> s) (for eg., while (std::cin >> s)) can be used to read input
    till end-of-file.
  * The getline() function is used to read a line of input from an istream object
-   into a string, consuming and excluding the terminating newline character.
+   into an std::string, consuming and discarding the terminating newline
+   character.
    Like the extraction operator, getline() also returns its istream argument.
    So, while (getline(is, s)) (for eg., while (getline(std::cin, s))) can also
    be used to read input line by line till end-of-file.
  * A common problem with using getline() after an extraction is that when the
    extraction ends in most cases, the terminating newline character remains in
-   the input buffer (or stream). The upcoming getline() sees the newline
-   character, consumes it, discards it, and stores an empty string in its string
-   argument.
+   the input buffer. The upcoming getline() sees the newline character, consumes
+   it, discards it, and stores an empty string in its std::string argument.
    To resolve this issue, is.ignore() (for eg., std::cin.ignore()) can be called
    immediately before getline().
 
  * In std::string::size_type, the first scope operator is used because the name
    'string' is defined in the 'std' namespace, and the second scope operator
-   is used because the name 'size_type' is defined in the 'string' class.
+   is used because the name 'size_type' is defined in the 'std::string' class.
    Thus, the scope resolution operator is basically used to tell the compiler
    what 'namespace' or what 'class' something belongs to.
  * The size_type type is a companion type to the string class which makes it
    possible to use such types in a machine-independent manner. For eg., the
    size_t type in C.
    Thus, any variable used to store the result from the size() member function
-   should be of type std::string::size_type.
+   of an std::string object should be of type std::string::size_type.
    Using 'auto' or 'decltype' instead of writing the type of a variable would be
    easier in such situations.
  * Although the precise type of std::string::size_type varies between
@@ -811,18 +832,20 @@ int main()
    integer type.
 
  * The string library lets us convert both character literals ('a') and string
-   literals ("a") to strings. But, when we mix strings and character/string
-   literals, at least one operand to each + operator must be of string type.
+   literals ("a") to std::string's. But, when we mix std::string's and
+   character/string literals, at least one operand to each + operator must be of
+   std::string type.
  * The type of a string literal is const char[], the type of a character literal
-   is char and the type of a string is string.
- * For eg., string s1 = "hello", s2 = "world";
-            string s3 = s1 + ", " + s2 + '\n'; // ok
-            string s4 = s1 + ", "; // ok
-            string s5 = "hello" + ", "; // error, no string type as an operand
-                                        // to +
-            string s6 = s1 + ", " + "world"; // ok, due to left to right
-                                             // associativity of +
-            string s7 = "hello" + ", " + s2 // error
+   is char and the type of an std::string is std::string.
+ * For eg., std::string s1 = "hello", s2 = "world";
+            std::string s3 = s1 + ", " + s2 + '\n'; // ok
+            std::string s4 = s1 + ", "; // ok
+            std::string s5 = "hello" + ", "; // error, no string type as an
+                                             // operand to +
+            std::string s6 = s1 + ", " + "world"; // ok, due to left to right
+                                                  // associativity of +
+            std::string s7 = "hello" + ", " + s2; // error
+            std::string s8 = "hello" + s2; // ok
    ['a' + 'b' is integer arithmetic.
     "hello" + 'a' is pointer arithmetic, due to array ([]) to pointer (*) decay.
     "hello" + "world" is an error.]
@@ -832,8 +855,8 @@ int main()
    isgraph(), islower(c), isprint(c), ispunct(c), isspace(c), isupper(c),
    isxdigit(c), tolower(c) and toupper(c).
 
- * The range-based for statement can be used to process every character in a
-   string.
+ * The range-based for statement can be used to process every character in an
+   std::string.
    For eg., for (char c : s) // or for (auto c : s)
                 std::cout << c << std::endl;
             In each iteration, the variable c is created and initialized with
@@ -854,7 +877,7 @@ int main()
    the value of i into j.
 
  * The subscript operator ([]) takes an std::string::size_type value (called the
-   index/subscript) when used with strings. It denotes the index of the
+   index/subscript) when used with std::string's. It denotes the index of the
    character we want to access and technically returns a reference to the
    character at the given index.
    For eg., char c = s[3]; copies the value of s[3] into c, whereas
@@ -865,21 +888,21 @@ int main()
     is simply used to copy the contents of i into j, but in the case of
     int& j = i;, the reference returned by i is used to bind the name 'j' to
     the object designated by the name 'i'.]
- * String indices begin at 0 and go upto (s.size() - 1).
+ * std::string indices begin at 0 and go upto (s.size() - 1).
    The result of using an out of range index is that undefined behaviour gets
    invoked. By implication, subscripting an empty string invokes undefined
    behaviour.
    To avoid such issues, the range-based for statement is generally used to
-   process characters in a string.
+   process characters in an std::string.
 
 
- * A 'vector' is a variable-length sequence of objects (references aren't
-   objects), all of which have the same type. To use the vector ADT (which is
-   defined as a class template, and not simply a class), we must include the
-   'vector' header. Because the vector library is part of the standard library,
-   the name 'vector' is defined in the std namespace.
- * A vector is also referred to as a 'container' because it contains other
-   objects.
+ * A 'vector' in C++ is a variable-length sequence of objects (references aren't
+   objects), all of which have the same type. To use the std::vector<T> compound
+   type (which is defined as a class instantiated from a class template), we
+   must include the 'vector' header.
+   Because the vector library is part of the standard library, the name 'vector'
+   is defined in the std namespace.
+ * A vector is an example of a 'container' because it contains other objects.
  * C++ has both 'class templates' and 'function templates'.
    Writing a template requires a fairly deep understanding of C++.
  * Templates are not themselves classes or functions. Instead, they can be
@@ -896,31 +919,33 @@ int main()
    For the class template vector, we supply the type of the object the vector
    will hold inside a pair of angle brackets following the template's name.
    For eg., std::vector<int> v;
-            std::vector<std::vector<string>> v;
+            std::vector<std::vector<std::string>> v;
  * A container cannot hold array objects, as the type of the elements to be
    stored in a container must be both copy-able and assignable.
    Arrays are neither.
    So, unless the arrays are wrapped into structs, or unless std::array's are
    used, a vector of arrays cannot be created.
 
- * Common ways to initialize vectors :-
-   (1) vector<T> v1; // default initialization; s1 is empty
-   (2) vector<T> v2 = v1; // v2 has a copy of each element in v1
-   (3) vector<T> v2(v1); // v2 has a copy of each element in v1
-   (4) vector<T> v3 = {a, b, c, ...}; // v3 has as many elements as there are
-                                      // initializers; elements are initialized
-                                      // by corresponding initializers
-   (5) vector<T> v3{a, b, c, ...}; // v3 has as many elements as there are
-       [a, b, c, ... are in        // initializers; elements are initialized
-        {}, and not in ()]         // by corresponding initializers
-   (6) vector<T> v4(n, val); // v4 has n elements with value val
-   (7) vector<T> v4(n); // v4 has n copies of a value-initialized object
+ * Common ways to initialize an std::vector :-
+   (1) std::vector<T> v1; // default initialization; v1 is empty
+   (2) std::vector<T> v2 = v1; // v2 has a copy of each element in v1
+   (3) std::vector<T> v2(v1); // v2 has a copy of each element in v1
+   (4) std::vector<T> v3 = {a, b, c, ...}; // v3 has as many elements as there
+                                           // are initializers; elements are
+                                           // initialized by corresponding
+                                           // initializers
+   (5) std::vector<T> v3{a, b, c, ...}; // v3 has as many elements as there are
+       [a, b, c, ... are in             // initializers; elements are
+        {}, and not in ()]              // initialized by corresponding
+                                        // initializers
+   (6) std::vector<T> v4(n, val); // v4 has n elements with value val
+   (7) std::vector<T> v4(n); // v4 has n copies of a value-initialized object
  * A value-initialized object means that the library creates a
    value-initialized element initializer for us. The value of the element
    initializer depends on the type of of the elements stored in the vector.
    If the vector holds elements of a built-in type, such as int, then the
    element initializer has a value of 0. If the elements are of a class type,
-   such as string, then the element initializer is default initialized.
+   such as std::string, then the element initializer is default initialized.
    It should again be noted that some classes require that we always supply
    an explicit initializer.
  * vector<int> v1(10); // v1 has 10 integers, each with value 0
@@ -928,9 +953,12 @@ int main()
    vector<int> v3(10, 1); // v3 has 10 integers, each with value 1
    vector<int> v4{10, 1}; // v4 has 2 integers with values 10 and 1
 
- * Common vector operations :-
+ * Common std::vector operations :-
    (1) v.empty() // returns true if the vector v is empty, false otherwise
+                 // empty() is a member function of the vector<T> class
    (2) v.size() // returns the number of elements in the vector v
+                // size() is a member function of the vector<T> class;
+                // the value returned is of type std::vector<T>::size_type
    (3) v.push_back(t) // adds an element with the value t to the end of the
                       // vector v
    (4) v[n] // returns the element at the index n in the vector v (technically a
@@ -947,15 +975,16 @@ int main()
     comparison operations are not defined, then we cannot compare two such
     vectors]
 
- * The range-based for statement can be used to process every element in a
-   vector as well.
+ * The range-based for statement can be used to process every element in an
+   std::vector as well.
  * The body of a range-based for must not change the size of the sequence over
    which it is iterating.
-   For eg., the body of a range-based for must not add elements to a vector.
+   For eg., the body of a range-based for must not add elements to an
+   std::vector.
 
  * The subscript operator ([]) takes an std::vector<T>::size_type value (called
-   the index/subscript) when used with vectors. It denotes the index of the
-   element we want to access and technically returns a reference to the
+   the index/subscript) when used with std::vector's. It denotes the index of
+   the element we want to access and technically returns a reference to the
    element at the given index.
    For eg., int i = v[3]; copies the value of v[3] into i, whereas
    int& i = v[3]; binds i to v[3].
@@ -965,34 +994,35 @@ int main()
     is simply used to copy the contents of i into j, but in the case of
     int& j = i;, the reference returned by i is used to bind the name 'j' to
     the object designated by the name 'i'.]
- * Vector indices begin at 0 and go upto (v.size() - 1).
+ * std::vector indices begin at 0 and go upto (v.size() - 1).
    The result of using an out of range index is that undefined behaviour gets
    invoked. By implication, subscripting an empty vector invokes undefined
    behaviour.
    To avoid such issues, the range-based for statement is generally used to
    process elements in a vector.
 
- * The elements of a vector (of type other than bool) are stored contiguously in
-   memory (heap, generally). bool is an exception because std::vector<bool> uses
-   only one bit per bool. Thus, although it does have contiguous memory, it
-   can't be used as a bool* (this is widely considered to be a false
-   optimization and a mistake on the part of C++ developers).
+
+ * The elements of an std::vector (of type other than bool) are stored
+   contiguously in memory (heap, generally). bool is an exception because
+   std::vector<bool> uses only one bit per bool. Thus, although it does have
+   contiguous memory, it can't be used as a bool* (this is widely considered to
+   be a false optimization and a mistake on the part of C++ developers).
  * For eg., in the case of std::vector<int>, each int object is stored one after
    another in memory (heap, generally), as an int object has a fixed size.
- * If there is no contiguous memory available for a push_back() operation, a
-   vector reallocates itself, just like realloc() in C. It should be noted that
-   in such a case, all the previously saved pointers (and iterators, discussed
-   below) will become invalidated.
- * For vectors such as std::vector<string>, the size of the string belonging to
-   a string object is not fixed. Thus, 'contiguity' in this case doesn't mean
-   that the first character of the second string is stored immediately after the
-   last character of the first string, and so on, but instead it means that the
-   vector of strings will store each string object contiguously in memory (heap,
-   generally), where a string object consists of a char* to the actual string
-   stored elsewhere in memory (heap, generally), alongwith some extra
-   information like the size of the actual string, etc. The original vector
-   object will be stored in stack (generally), consisting of various data
-   members explained below.
+ * If there is no contiguous memory available for a push_back() operation, an
+   std::vector reallocates itself, just like realloc() in C. It should be noted
+   that in such a case, all the previously saved pointers (and iterators,
+   discussed below) will become invalidated.
+ * For std::vector's such as std::vector<std::string>, the size of the string
+   belonging to an std::string object is not fixed. Thus, 'contiguity' in this
+   case doesn't mean that the first character of the second string is stored
+   immediately after the last character of the first string, and so on, but
+   instead it means that the std::vector of std::string's will store each
+   std::string object contiguously in memory (heap, generally), where an
+   std::string object consists of a char* to the actual string stored elsewhere
+   in memory (heap, generally), alongwith some extra information like the size
+   of the actual string, etc. The original std::vector object will be stored in
+   stack (generally), consisting of various data members explained below.
    This is similar to how dynamic multidimensional arrays are created in C by
    using malloc, where, for eg., a 2-D array (sort of) can be dynamically
    created by allocating a malloced block of pointers to the starting addresses
@@ -1004,15 +1034,16 @@ int main()
    contains the address of the first element of a dynamic array stored in heap,
    generally, whose elements are objects storing the addresses of the first
    elements of dynamic arrays of int's stored in heap, generally.
- * Similar to the meaning of 'contiguity' in the case of std::vector<string>,
-   a vector of vectors also contains vector objects stored contiguously in the
-   memory (heap, generally), where a vector object contains a pointer to the
-   actual vector stored elsewhere in memory (heap, generally), alongwith some
-   extra information. The original vector object is stored in stack, generally.
+ * Similar to the meaning of contiguity in the case of std::vector<std::string>,
+   an std::vector of std::vectors also contains std::vector objects stored
+   contiguously in the memory (heap, generally), where an std::vector object
+   contains a pointer to the actual vector stored elsewhere in memory (heap,
+   generally), alongwith some extra information. The original std::vector object
+   is stored in stack, generally.
 
- * Thus, it should be noted that when a string object is created, such as
-   std::string str;, 'str' becomes the name of a fixed-size string object stored
-   in memory (stack, generally) with several data members. The first data
+ * Thus, it should be noted that when an std::string object is created, such as
+   std::string str;, 'str' becomes the name of a fixed-size std::string object
+   stored in memory (stack, generally) with several data members. The first data
    member, p, is a pointer to the first character in a dynamically allocated
    array of characters in memory (heap, generally). The second data member,
    length, contains the length of the string. The third data member, capacity,
@@ -1023,32 +1054,32 @@ int main()
     small strings directly on the stack in a statically sized char array instead
     of using dynamic heap storage.
     For eg., on this system, if the length of a string is less than 16, then it
-    is stored directly inside the string object (using a union)]
- * Similar logic is applicable for vector objects, i.e. when a vector object is
-   created, such as std::vector<int> vec;, 'vec' becomes the name of a
-   fixed-size vector object stored in memory (stack, generally) with several
-   data members, such as a pointer to a dynamically allocated array of int's in
-   memory (heap, generally), plus some extra variables to keep track of the size
-   and capacity of the vector.
+    is stored directly inside the string object (using a union).]
+ * Similar logic is applicable for std::vector objects, i.e. when an std::vector
+   object is created, such as std::vector<int> vec;, 'vec' becomes the name of a
+   fixed-size std::vector object stored in memory (stack, generally) with
+   several data members, such as a pointer to a dynamically allocated array of
+   int's in memory (heap, generally), plus some extra variables to keep track of
+   the size and capacity of the vector.
 
 
  * Additional std::string and std::vector operations will be discussed later.
 
 
  * Although we can use subscripts / pointers / range-based for statements to
-   access the characters of a string or the elements of a vector, there is a
-   more general mechanism, known as 'iterators', that we can use for the same
-   purpose.
- * As stated above, subscripting a string/vector needs to be done carefully to
-   avoid undefined behaviour. So, subscripting is the least preferable option
-   to access the characters of a string or the elements of a vector.
-   Moreover, in addition to vector, the standard library defines several other
-   kinds of containers. All of the library containers have iterators, but only a
-   few of them support subscripting.
-   [The string class also supports iterators, even though strings aren't
-    containers]
- * Moving on, we have the option of using pointers to iterate over strings and
-   vectors.
+   access the characters of an std::string or the elements of an std::vector,
+   there is a more general mechanism, known as 'iterators', that we can use for
+   the same purpose.
+ * As stated above, subscripting an std::string/std::vector needs to be done
+   carefully to avoid undefined behaviour. So, subscripting is the least
+   preferable option to access the characters of an std::string or the elements
+   of an std::vector. Moreover, in addition to std::vector, the standard library
+   defines several other kinds of containers. All of the library containers have
+   iterators, but only a few of them support subscripting.
+   [The std::string class also supports iterators, even though std::string's
+    aren't containers]
+ * Moving on, we have the option of using pointers to iterate over std::string's
+   and std::vector's.
    For eg., in arrays, we can use subscripting like this -
    for (int i = 0; i < size; i++)
        std::cout << arr[i];
@@ -1058,25 +1089,26 @@ int main()
        std::cout << *(start);
        (start)++;
    }
-   Given that 'start' initially points to the first element of the array and
+   given that 'start' initially points to the first element of the array and
    'end' points to the location 'one past the end of the array', since it is
    guaranteed that the address one past the end element of an array is valid.
    [As always, the value at this address should not be accessed]
    This approach is again limited in some respects as this relies on the fact
    that the consecutive elements are stored contiguously in memory.
-   Even though the elements of strings and vectors (except of type bool) are
-   guaranteed to be stored contiguously in memory, the same cannot be said for
-   the elements of other containers such as std::list, which is a linked list.
+   Even though the elements of std::string's and std::vector's (except of type
+   bool) are guaranteed to be stored contiguously in memory, the same cannot be
+   said for the elements of other containers such as std::list, which is a
+   linked list.
  * As another alternative, we have the option to use range-based for statements.
    When we have to process every element sequentially, using a range-based for
    statement is the preferred choice, as it leads to more legible code.
    But, in a few cases, we may need iterators, such as when we need to jump
    ahead and back while iterating. In such cases, a range-based for statement
    won't work.
- * So, iterators and range-based for statements are the only way to iterate over
-   most containers. Hence, many programmers use them even with strings and
-   vectors (where other options are available) just to get themselves into the
-   proper mindset.
+ * So, iterators and range-based for statements are the only ways to iterate
+   over most containers. Hence, many programmers use them even with
+   std::string's and std::vector's (where other options are available) just to
+   get themselves into the proper mindset.
 
  * Like pointers, iterators give us indirect access to objects.
    We can use an iterator to fetch an element and iterators have operations to
@@ -1090,18 +1122,18 @@ int main()
    iterators, such as begin() and end().
  * auto begin = v.begin(), end = v.end();
    Here, begin becomes an iterator that denotes the first element, if there is
-   one, and end becomes an iterator that is positioned one past the end of the
-   associated container (or string).
-   If the container (or string) is empty, then begin becomes the same iterator
-   as end, i.e. the 'off-the-end iterator'.
+   one, and end becomes an iterator that is positioned one past the last element
+   of the associated container (or std::string).
+   If the container (or std::string) is empty, then begin becomes the same
+   iterator as end, i.e. the 'off-the-end iterator'.
  * In general, we do not know, or care about, the precise type that an iterator
    has. Hence, we generally use the auto type specifier for iterators.
    Like with size_type, the library types that support iterators define the
    iterator type like std::string::iterator, std::string::const_iterator,
    std::vector<int>::iterator, std::vector<int>::const_iterator, etc.
-   Like with pointers, if a string or a vector is const, we can use only its
-   const_iterator type, but if a string or a vector is non-const, we may use
-   either iterator or const_iterator.
+   Like with pointers, if an std::string or an std::vector is const, we can use
+   only its const_iterator type, but if an std::string or an std::vector is
+   non-const, we may use either iterator or const_iterator.
    If the object is const, begin() and end() return a const_iterator. If the
    object is non-const, begin() and end() return an iterator.
    To get the const_iterator even when the object is non-const, we may use
@@ -1121,20 +1153,21 @@ int main()
  * Since iterators for many containers don't support <, <=, > and >=, we use !=
    to check whether we have reached the end of a container (or string) when
    iterating using iterators, instead of <.
- * Additional iterator operations supported by strings and vectors :-
+ * Additional iterator operations supported by std::string's/std::vector's :-
    (1) iter + n - yields an iterator n elements forward
    (2) iter - n - yields an iterator n elements backward
    (3) iter += n - equivalent to iter = (iter + n)
    (4) iter -+ n - equivalent to iter = (iter - n)
-   (5) iter_1 - iter 2 - yields number that when added to the iter_2 yields
+   (5) iter_1 - iter 2 - yields the number that when added to iter_2 yields
                          iter_1; iter_1 and iter_2 must denote elements in,
-                         or one past the end of, the same container (or string);
-                         the result is of type std::string::difference_type or
+                         or one past the end of, the same container
+                         (or std::string); the result is of type
+                         std::string::difference_type or
                          std::vector<T>::difference_type, etc. (signed integer)
    (6) <, <=, > and >= - again, the iterators must denote elements in, or one
-                         past the end of, the same container (or string)
+                         past the end of, the same container (or std::string)
  * For eg., to get the middle element of a container which supports these
-   additional operations, or a string, using iterators, we may use
+   additional operations, or an std::string, using iterators, we may use
    auto mid = begin + ((end - begin) / 2);
 
  * When used by themselves in a statement, i++ and ++i have the same effect,
@@ -1173,48 +1206,50 @@ int main()
    after each operation that changes the sequence.
 
 
- * Array is a compound type.
-   Like vectors, arrays are containers of unnamed objects of a single type that
-   we access by position.
-   Unlike vectors, arrays have fixed size.
- * The number of elements in an array is a part of the array's type, and as a
-   result, the dimension must be known at compile time, which means that the
-   dimension must be a constant expression. (VLA's aren't allowed in C++)
- * By default, elements in an array are default initialized.
-   For eg., a default-initialized array of a built-in type that is defined
-   inside a function has garbage/undefined values.
- * Like with vectors, when we define an array, we must specify a type for the
-   array. We cannot let auto to deduce the type of a vector or an array from a
-   list of initializers.
- * As with vectors, arrays hold objects. Thus, there are no arrays of
+ * Array (static) is a compound type.
+   Like std::vector's, static arrays are containers of unnamed objects of a
+   single type that we access by position.
+   Unlike std::vector's, static arrays have fixed size.
+ * The number of elements in a static array is a part of the array's type, and
+   as a result, the dimension must be known at compile time, which means that
+   the dimension must be a constant expression. (VLA's aren't allowed in C++)
+ * By default, elements in a static array are default initialized.
+   For eg., a default-initialized static array of a built-in type that is
+   defined inside a function has garbage/undefined values.
+ * Like with std::vector's, when we define a static array, we must specify a
+   type for the array. We cannot let auto to deduce the type of an std::vector
+   or a static array from a list of initializers.
+ * As with vectors, static arrays hold objects. Thus, there are no arrays of
    references.
  * int a[] = {0, 1, 2}; // dimension may be omitted
    int b[4] = {1, 2}; // b[2] and b[3] are value-initialized to 0
    string c[3] = {"hello", "world"}; // c[2] is the empty string
    double d[2] = {1.2, 3.4, 5.6}; // error - too many initializers
    char e[] = {'k', 'u', 's', 'h'};
- * When char arrays are initialized using string literals, the terminating null
-   character is copied into the array along with the characters in the literal.
- * We cannot initialize an array as a copy of another array, not is it legal to
-   assign one array to another.
+ * When static char arrays are initialized using string literals, the
+   terminating null character is copied into the array along with the characters
+   in the literal.
+ * We cannot initialize a static array as a copy of another array, not is it
+   legal to assign one static array to another.
  * int* p[10]; // p is a 10-element array of pointers to int
    int& r[10]; // error, array of references cannot be created
    int (* p)[10]; // p can point to a 10-element array of int's
    int arr[10];
    int (& r)[10] = arr; // r refers to a 10-element array of int's
    [Note that arr doesn't decay to a pointer in this case]
- * A range-based for statement can be used to access the elements of an array.
- * A variable/value that subscripts an array should have type size_t, defined in
-   the cstddef header. size_t is some unsigned integer type.
- * As with strings and vectors, subscripting arrays should be done carefully to
-   avoid undefined behaviours.
+ * A range-based for statement can be used to access the elements of a static
+   array.
+ * A variable/value that subscripts a static array should have type size_t,
+   defined in the cstddef header. size_t is some unsigned integer type.
+ * As with std::string's and std::vector's, subscripting static arrays should be
+   done carefully to avoid undefined behaviours.
 
- * Strictly speaking, there is no such thing as a multidimensional array in
-   C/C++. Whay is commonly thought of as a multidimensional array is in fact
+ * Strictly speaking, there is no such thing as a multidimensional static array
+   in C/C++. Whay is commonly thought of as a multidimensional array is in fact
    an array of arrays, and so on.
    [Same logic as C applies to C++ as well regarding multidimensional arrays]
 
- * In C++, arrays decay to pointers in most contexts, just like in C.
+ * In C++, static arrays decay to pointers in most contexts, just like in C.
    In C, the exceptions to this decay are when the array expression appears as
    an operand of either the &, the sizeof or the alignof operators, or when it
    is a string literal being used as an initializer in a definition.
@@ -1223,8 +1258,8 @@ int main()
  * For eg., int a[10]; auto b(a); makes the type of b int*, not int[10].
    But, decltype(a) b; makes the type of b int[10].
 
- * Pointers to array elements support the same operations as iterators on
-   strings and vectors.
+ * Pointers to static array elements support the same operations as iterators on
+   std::string's and std::vector's.
    These operations have the same meaning when applied to pointers that point to
    elements in the same array as they do when applied to iterators.
    Using pointer arithemtic on pointers pointing to different objects causes
@@ -1235,19 +1270,25 @@ int main()
    subtraction might yield a negative value, ptrdiff_t is some signed integer
    type.
    [Same logic as C applies to C++ as well regarding pointers]
- * Two functions begin() and end() are defined for arrays to get the first and
-   off-the-end addresses of an array.
+ * Two functions begin() and end() are defined for static arrays to get the
+   first and off-the-end addresses of an array.
    For eg., int* begin = std::begin(arr); int* end = std::end(arr);
-   Here also, arr isn't decayed to a pointer, as the functions begin() and end()
-   take a reference to an array as their arguments.
+   [begin() and end() are examples of function templates, which is why passing
+    the size of the array is not required]
+ * begin() and end() also work with types that do have .begin() and .end()
+   member functions.
+   Thus, even though begin() and end() might seem like an overkill for static
+   arrays (as we can simply use pointer arithmetic to get the first and the
+   off-the-end addresses of an array), the same code can be used to traverse an
+   std::vector or an std::list.
  * a[4] == *(a + 4), a[3][2] == *(*(a + 3) + 2), and so on.
  * Subscripts and pointer notation can both be used for pointers as well as
-   arrays.
+   static arrays.
    One distinction is that when the subscript operator is used with pointers,
    it can also take negative values.
    For eg., int a[10]; int* p = a; p += 4; p[-2] = 3;
-   This is because once an array is defined, the array name cannot be used to
-   designate any other object. But, pointers can be made to point to other
+   This is because once a static array is defined, the array name cannot be used
+   to designate any other object. But, pointers can be made to point to other
    objects of the same type. So, when the subscript operator is used with
    pointers, the index can be a signed integer.
 
@@ -1259,9 +1300,9 @@ int main()
  * We can use a null-terminated char array (i.e. a C-style string) anywhere that
    we can use a string literal in C++, such as in initializing / assigning to
    a library string object, in concatenation, etc.
- * The string member function named c_str() returns a pointer to the beginning
-   of a null-terminated char array that holds the same data as the characters in
-   the string object.
+ * The std::string member function named c_str() returns a pointer to the
+   beginning of a null-terminated char array that holds the same data as the
+   characters in the string object.
    But, the array returned by c_str() isn't guaranteed to be valid indefinitely.
    Thus, is a program needs continued access to the contents of that array, then
    the program must copy the array returned by c_str().
@@ -1272,7 +1313,7 @@ int main()
 
  * Thus, arrays and pointers are error-prone, as they are used for low-level
    manipulations and it is easy to make book-keeping mistakes.
-   Modern C++ programs should use vectors, iterators and library strings, rather
-   than arrays, pointers and C-style strings.
+   Modern C++ programs should use std::vector's, iterators and std::string's,
+   rather than arrays, pointers and C-style strings.
 
  * End of Trivia */
