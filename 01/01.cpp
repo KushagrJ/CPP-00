@@ -1115,7 +1115,7 @@ int main()
    move from one element to another.
    As with pointers, an iterator may be valid or invalid.
    A valid iterator either denotes an element or denotes a positon one past
-   the last element in a container (or string).
+   the last element in a container (or std::string).
    All other iterator values are invalid.
  * Unlike pointers, we do not use the address-of operator to obtain an iterator.
    Instead, types that support iterators have member functions that return
@@ -1123,7 +1123,7 @@ int main()
  * auto begin = v.begin(), end = v.end();
    Here, begin becomes an iterator that denotes the first element, if there is
    one, and end becomes an iterator that is positioned one past the last element
-   of the associated container (or std::string).
+   of the container (or std::string).
    If the container (or std::string) is empty, then begin becomes the same
    iterator as end, i.e. the 'off-the-end iterator'.
  * In general, we do not know, or care about, the precise type that an iterator
@@ -1204,6 +1204,34 @@ int main()
    invalidate iterators.
    Thus, we need to ensure that the iterators are repositioned, as appropriate,
    after each operation that changes the sequence.
+
+
+ * C++ lets us define what operators mean when applied to objects of class type.
+   This is known as 'operator overloading'.
+ * For eg., the array subscripting operation arr[n] is equivalent to
+   *(&(arr[0]) + n). But, when the subscript operator is applied to an
+   std::string/std::vector<T> object, then the resulting operation isn't
+   equivalent to *(&(a[0]) + n), as the name 'a' only designates the respective
+   std::string/std::vector<T> object, and not the actual string/vector stored
+   elsewhere in memory.
+   Thus, in this case, the subscript operator [] has a different meaning, which
+   is defined as part of the class definition.
+ * Similarly, the bitwise shift operators >> and << when used with istream and
+   ostream objects have a different meaning.
+
+ * Operator overloading is used with iterators as well.
+ * An iterator can be thought of as a metaphor of a pointer (that we can
+   increment, dereference, etc.).
+   For std::string and some containers such as std::vector, it may be possible
+   that an implementation simply uses a pointer (or a class with a pointer as a
+   data member) to implement an iterator.
+   But, for other containers such as std::list, implementing an iterator is
+   usually more involved than using pointers, as objects of an std::list aren't
+   stored contiguously in memory.
+ * In any case, the concept of iterators was introduced to get a uniform way of
+   interacting with std::string's and containers such as std::vector and
+   std::list without bothering about the exact implementation details of these
+   data structures.
 
 
  * Array (static) is a compound type.
