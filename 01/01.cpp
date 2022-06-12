@@ -622,15 +622,14 @@ int main()
  * When the expression to which we apply decltype is not simply a variable, we
    get the type that the expression yields.
    decltype returns a reference type (intead of the type itself) for expressions
-   that yield objects that can stand on the left-hand side of assignment (=).
+   that yield lvalues (explained later).
    For eg., int i = 42, * p = &i, & r = i;
             decltype(i) returns int
+            decltype(&i) returns int* since &i doesn't yield an lvalue
             decltype(r) returns int&
-            decltype(r + 10) returns int since r + 10 doesn't yield an object
-                             that can stand on the left-hand side of =
+            decltype(r + 10) returns int since r + 10 doesn't yield an lvalue
             decltype(p) returns int*
-            decltype(*p) returns int& instead of int, since *p yields an
-                         object that can stand on the left-hand side of =
+            decltype(*p) returns int& instead of int, since *p yields an lvalue
  * When we apply decltype to a variable without any parentheses, we get the type
    of that variable. But, if we wrap the variable's name in one or more sets of
    parentheses, the compiler will treat it as an expression as not being simply
@@ -641,8 +640,7 @@ int main()
             decltype(j) returns int&
             decltype((j)) also returns int&, since (j) is treated as an
                           expression and (j) now corresponds to the bound object
-                          whose type is int and can stand on the left-hand side
-                          of =
+                          whose type is int and is an lvalue
             [j not being treated as a synonym for i is only applicable for
              decltype(j), and not for decltype((j))]
 
@@ -1208,6 +1206,8 @@ int main()
 
  * C++ lets us define what operators mean when applied to objects of class type.
    This is known as 'operator overloading'.
+   However, the number of operands and the precedence & the associativity of the
+   operators cannot be changed.
  * For eg., the array subscripting operation arr[n] is equivalent to
    *(&(arr[0]) + n). But, when the subscript operator is applied to an
    std::string/std::vector<T> object, then the resulting operation isn't
