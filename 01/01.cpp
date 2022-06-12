@@ -258,6 +258,8 @@ int main()
                                    sizeof (i + j) returns the size of int.
    Thus, i by itself isn't promoted to int, as it isn't 'used' in an expression
    in these cases. But, (i + j) makes i and j both typecast to int.
+   [In C, however, sizeof i returns the size of int, i.e. in C, for eg., 'A' is
+    considered to be of type int, whereas in C++, 'A' is of type char]
 
  * A constant expression such as 41, 012, 0x23, 5.7, 'A', true, false, nullptr,
    etc. is known as a literal.
@@ -1282,7 +1284,8 @@ int main()
    an operand of either the &, the sizeof or the alignof operators, or when it
    is a string literal being used as an initializer in a definition.
    In C++, a few more exceptions are applicable, such as when an array is passed
-   by reference or assigned to a reference variable, used with decltype, etc.
+   by reference or assigned to a reference variable, used with decltype, used as
+   an operand of typeid, etc.
  * For eg., int a[10]; auto b(a); makes the type of b int*, not int[10].
    But, decltype(a) b; makes the type of b int[10].
 
