@@ -269,6 +269,64 @@ int main()
  * See https://en.cppreference.com/w/cpp/language/operator_precedence
 
 
- * Resume from Chapter 5. Statements
+ * 'Simple statements' end with a semicolon.
+ * An expression becomes an 'expression statement' when it is followed by a
+   semicolon. Expression statements cause the expression to be evaluated and its
+   final result to be discarded.
+   For eg., x + y; // useless expression statement; the value of x + y is
+                   // discarded
+            x = 5; // useful expression statement; 5 is first assigned to x as
+                   // part of the evaluation of the expression, and the final
+                   // result of the expression, i.e. 5, is now discarded
+   Commonly, an expression statement contains an expression that has a 'side
+   effect', such as assigning a value to a variable, or printing something.
+ * A 'null statement' is a single semicolon.
+   Such usage is most common when a loop's work can be done within its
+   condition.
+   For eg., while ((std::cin >> x) && (x != num))
+                ;
+   Alternatively, a 'continue' statement may also be used in such cases, i.e.
+            while ((std::cin >> x) && (x != num))
+                continue;
+   In many cases, semicolons that might appear illegal are nothing more than
+   null statements.
+   For eg., v = v1 + v2;; // ok; the 2nd semicolon is a useless null statement
+
+ * A 'compound statement', usually referred to as a 'block', is a (possibly
+   empty) sequence of statements (simple, compound, etc.) and
+   definitions/declarations surrounded by a pair of curly braces.
+ * An empty block, i.e. a pair of curly braces with no statements, is equivalent
+   to a null statement.
+ * Compound statements don't end with a semicolon.
+ * A block is a scope, and thus the names introduced inside a block are
+   accessible only in that block, and in blocks nested inside that block.
+   Names are visible from where they are introducesd until the end of the
+   immediately enclosing block.
+ * Compound statements are used when the language requires a single statement
+   (simple, compound, etc.), for eg., if-else, while, for, etc., but the logic
+   of the program needs multiple statements.
+
+ * Variables can be defined inside the control structure of the if, if-else,
+   switch, while and for statements.
+   Variables defined in the control structure are visible only within that
+   statement and are out of scope after the statement ends.
+   For eg., if (int i = get_num())
+                ...
+            else
+                ...
+            switch (int i = get_num())
+                ...
+            while (int i = get_num())
+                ...
+            for (int i = get_num(); int j = get_num(); i++)
+                ...
+
+ * 'Conditional statements' include the if statement, the if-else statement, and
+   the switch statement.
+ * An if statement conditionally executes another statement based on whether a
+   specified condition is true.
+   The syntactic form of an if statement is
+   if (condition)
+       statement
 
  * End of Trivia */
