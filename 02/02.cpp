@@ -628,4 +628,8 @@ int main()
 
  * Add stuff from 5.6 try Blocks and Exception Handling later.
 
+
+ * A 'function' is a block of code, i.e. a compound statement, with a name.
+   We execute the code by calling the function.
+
  * End of Trivia */
