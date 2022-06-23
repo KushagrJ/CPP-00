@@ -270,6 +270,7 @@ int main()
 
 
  * 'Simple statements' end with a semicolon.
+
  * An expression becomes an 'expression statement' when it is followed by a
    semicolon. Expression statements cause the expression to be evaluated and its
    final result to be discarded.
@@ -280,6 +281,7 @@ int main()
                    // result of the expression, i.e. 5, is now discarded
    Commonly, an expression statement contains an expression that has a 'side
    effect', such as assigning a value to a variable, or printing something.
+
  * A 'null statement' is a single semicolon.
    Such usage is most common when a loop's work can be done within its
    condition.
@@ -292,19 +294,25 @@ int main()
    null statements.
    For eg., v = v1 + v2;; // ok; the 2nd semicolon is a useless null statement
 
+
  * A 'compound statement', usually referred to as a 'block', is a (possibly
    empty) sequence of statements (simple, compound, etc.) and
    definitions/declarations surrounded by a pair of curly braces.
+
  * An empty block, i.e. a pair of curly braces with no statements, is equivalent
    to a null statement.
+
  * Compound statements don't end with a semicolon.
+
  * A block is a scope, and thus the names introduced inside a block are
    accessible only in that block, and in blocks nested inside that block.
    Names are visible from where they are introducesd until the end of the
    immediately enclosing block.
+
  * Compound statements are used when the language requires a single statement
    (simple, compound, etc.), for eg., if-else, while, for, etc., but the logic
    of the program needs multiple statements.
+
 
  * Variables can be defined inside the control structure of the if, if-else,
    switch, while and for statements.
@@ -321,12 +329,203 @@ int main()
             for (int i = get_num(); int j = get_num(); i++)
                 ...
 
+
  * 'Conditional statements' include the if statement, the if-else statement, and
    the switch statement.
- * An if statement conditionally executes another statement based on whether a
-   specified condition is true.
-   The syntactic form of an if statement is
+
+ * An if/if-else statement conditionally executes another statement based on
+   whether a specified condition is true.
+
+ * An if statement has the following syntactic form :-
    if (condition)
-       statement
+       statement // simple, compound, etc.
+   [condition must be an initialized variable definition or an expression of a
+    type convertible to bool.
+    statement is executed if condition evaluates to true.]
+
+ * An if-else statement has the following syntactic form :-
+   if (condition)
+       statement1 // simple, compound, etc.
+   else
+       statement2 // simple, compound, etc.
+   [condition must be an initialized variable definition or an expression of a
+    type convertible to bool.
+    statement1 is executed if condition evaluates to true, whereas statement2 is
+    executed if condition evaluates to false.]
+
+ * The 'dangling else' ambiguity is resolved by matching each else with the
+   closest preceding unmatched if within the same scope.
+   For eg., 01. int x = 0, y = 0;
+            02. if (x == 0)
+            03.     if (y == 0)
+            04.         std::cout << "0\n";
+            05.     else
+            06.         std::cout << "1\n";
+            07. else
+            08.     if (y == 0)
+            09.         std::cout << "2\n";
+            10.     else
+            11.         std::cout << "3\n";
+   Here, lines 03-06 form a single statement which is part of line 02's if,
+   whereas lines 08-11 form a single statement which is part of line 07's else.
+   It is generally advised to use braces in such cases in order to improve
+   readability and to avoid ambiguity.
+   For eg., 01. int x = 0, y = 0;
+            02. if (x == 0)
+            03.     if (y == 0)
+            04.         std::cout << "0\n";
+            05. else
+            06.     if (y == 0)
+            07.         std::cout << "2\n";
+            08.     else
+            09.         std::cout << "3\n";
+   Here, line 05's else is matched with line 03's if, making the program
+   logically erroneous, as the indendation suggests that the programmer intended
+   for line 05's else to be matched with line 02's if.
+   The corrected version is as follows :-
+            01. int x = 0, y = 0;
+            02.
+            03. if (x == 0)
+            04. {
+            05.     if (y == 0)
+            06.         std::cout << "0\n";
+            07. }
+            08.
+            09. else
+            10. {
+            11.     if (y == 0)
+            12.         std::cout << "2\n";
+            13.     else
+            14.         std::cout << "3\n";
+            15. }
+   Here, line 09's else is matched with line 03's if (as intended) because line
+   05's if is not in the same scope as line 09's else.
+   [Lines 04-07 form a compound statement consisting of a single if statement,
+    and lines 10-15 form a compound statement consisting of a single if-else
+    statement]
+
+ * Thinking of 'else if' as a single keyword improves readability for
+   programmers, even though there is no such thing as an 'else if' in C/C++,
+   unlike the 'elif' keyword in Python.
+   This means that
+       if (condition1)
+           statement1
+       else if (condition2)
+           statement2
+       else if (condition3)
+           statement3
+       else if ...
+           ...
+       else
+           statement
+   is seen by the compiler as
+       if (condition1)
+           statement1
+       else
+           if (condition2)
+               statement2
+           else
+               if (condition3)
+                   statement3
+               else
+                   if ...
+                       ...
+                   else
+                       statement
+
+ * A switch statement has the following syntactic form :-
+   switch (foo)
+   {
+       case label1:
+           statement(s)
+           break;
+       case label2:
+           statement(s)
+           break;
+       case label3:
+           statement(s)
+           break;
+       ...
+           ...
+       default:
+           statement(s)
+   }
+   [foo must be an initialized variable definition or an expression of a type
+    convertible to integral type.
+    foo is evaluated and the result is converted to integral type.
+    Then, the result of foo is compared with the value associated with each case
+    label.
+    Each case label must be an integral constant expression (which, as opposed
+    to in C, also includes const integral variables initialized using an
+    integral constant expression).
+    Also, it is an error for any two case labels to have the same value.
+    For eg., switch (x) {case 65: foo; case 'A': bar;}.
+    If the result of foo matches the value of a case label, then execution
+    begins with the first statement following that case label.
+    If no case label matches the the result of foo, then execution begins with
+    the first statement following the default case label, if there is one.
+   [Without break;, every statement starting with the first statement of the
+    matched case label to the end of the switch statement would be executed.
+    It should be noted that break; works with loops and switch, but continue;
+    works only with loops. Thus, if continue; is used with a switch which is
+    inside a loop, then that continue; would be part of the loop, i.e. it will
+    cause the program to skip over the rest of the loop, including the other
+    parts of the switch statement.]
+   [Multiple labels can be used for the same case like this -
+    case label1 :
+    case label2 :
+        statement(s)
+        break;
+    Here, due to the absence of break; in case label1, the program would
+    process the statement(s) of case label2 if label1 is matched. In essence,
+    both the labels would refer to the same statement(s).]
+   [Since execution in a switch statement can jump across case labels, therefore
+    when execution jumps to a particular case, any code that occurred inside the
+    switch before that label is ignored.
+    Thus, initializing variables inside switch needs to be done using compound
+    statements.
+    For eg., switch (c)
+             {
+                 case true:
+                     int x; // ok, as x is not initialized, and only defined
+                     int y = 1; // error, as other cases may use y, bypassing
+                                // this initialization
+                     break;
+                 default:
+                     x = 10; // ok
+                     std::cout << y << '\n';
+             }
+    Not using the variable initialized in one case in another case doesn't make
+    the code legal, i.e. in the above example, not using the value of y in
+    default doesn't make the code legal.
+    For eg., the following code is still erroneous :-
+             switch (c)
+             {
+                 case true:
+                     int y = 1;
+                     std::cout << y << '\n';
+                     break;
+                 default:
+                     std::cout << "hello\n";
+             }
+    In order to initialize a variable inside a switch statement, a compound
+    statement needs to be used, in order to limit the scope of the initialized
+    variable.
+    For eg., switch (c)
+             {
+                 case true:
+                     {
+                         int y = 1;
+                         std::cout << y << '\n';
+                     }
+                     break;
+                 default:
+                     std::cout << "hello\n";
+             }
+    Also see https://stackoverflow.com/a/19830820]
+
+
+ * 'Iterative statements', commonly called loops, include the while staement,
+    the for statement and the do-while statement.
 
  * End of Trivia */
