@@ -314,7 +314,7 @@ int main()
    of the program needs multiple statements.
 
 
- * Variables can be defined inside the control structure of the if, if-else,
+ * Variables can be defined inside the control structures of the if, if-else,
    switch, while and for statements.
    Variables defined in the control structure are visible only within that
    statement and are out of scope after the statement ends.
@@ -525,7 +525,107 @@ int main()
     Also see https://stackoverflow.com/a/19830820]
 
 
- * 'Iterative statements', commonly called loops, include the while staement,
-    the for statement and the do-while statement.
+ * 'Iterative statements', commonly called loops, include the while statement,
+   the for statement and the do-while statement.
+   Iterative statements are used to repeatedly execute other statements, based
+   on some criteria.
+
+ * A while statement has the following syntactic form :-
+   while (condition)
+       statement // simple, compound, etc.
+   [condition must be an initialized variable definition or an expression of a
+    type convertible to bool.
+    condition cannot be empty.
+    statement is executed as long as condition evaluates to true.
+    Variables defined in a while condition or body are created and destroyed on
+    each iteration.]
+
+ * A for statement has the following syntactic form :-
+   for (init-statement condition; expression)
+       statement // simple, compound, etc.
+   [init-statement must be either a definition/declaration statement, an
+    expression statement or a null statement. Each of these statements ends with
+    a semicolon.
+    condition must be an initialized variable definition or an expression of a
+    type convertible to bool.
+    condition can be empty, which translates to true.
+    statement is executed as long as condition evaluates to true.
+    Variables defined in a for condition or body are created and destroyed on
+    each iteration.
+    expression is evaluated immediately after statement is executed.
+    When condition evaluates to false, statement is not executed and
+    consequently, expression is not evaluated.
+    expression can also be empty.]
+
+ * A range-based for statement can be used to iterate over the elements of a
+   sequence, and has the following syntactic form :-
+   for (definition : expression)
+       statement // simple, compound, etc.
+   [definition defines a variable. It must be possible to convert each element
+    of the sequence to the variable's type. The easiest way to ensure that the
+    types match is to use the auto type specifier.
+    expression must be a sequence, i.e. either be a braced initializer list, an
+    array, or an object of a type such as std::vector or std::string that has
+    begin and end member functions that return iterators.]
+   [For eg., for (auto& r : v)
+                 r *= 2;
+    is equivalent to
+             for (auto beg = v.begin(), end = v.end(); beg != end; ++(beg))
+             {
+                 auto& r = *(beg);
+                 r *= 2;
+             }
+    Thus, the body of a range-based for must not change the size of the sequence
+    over which it is iterating, since the value of end() is cached, and the
+    value of the iterator end might get invalidated.]
+
+ * A do-while statement has the following syntactic form :-
+   do
+       statement // simple, compound, etc.
+   while (condition);
+   [condition must be an expression of a type convertible to bool, and cannot be
+    an initialized variable definition.
+    condition cannot be empty.
+    Regardless of the value of the condition, statement is executed at least
+    once. Thereafter, statement is executed as long as condition evaluates to
+    true.
+    Variables defined in a do-while body are created and destroyed on each
+    iteration.]
+
+
+ * 'Jump statements' include the break statement, the continue statement, the
+   goto statement and the return statement.
+
+ * A break statement terminates the nearest enclosing while, do-while, for or
+   switch statement.
+
+ * A continue statement terminates the current iteration of the nearest
+   enclosing loop and immediately begins the next iteration.
+   In the case of a while or a do-while loop, execution continues by evaluating
+   the condition. In a traditional for loop, execution continues at the
+   expression inside the for header. In a range-based for loop, execution
+   continues by initializing the control variable from the next element in the
+   sequence.
+
+ * A goto statement provides an unconditional jump from the goto to another
+   statement in the same function and has the following syntactic form :-
+   goto label;
+   label: statement // simple, compound, etc.
+   [label is an identifier that identifies a statement.
+    Label identifiers are independent of the other identifiers. Hence, a label
+    may have the same identifier as another entity in the program without
+    interfering with the other uses of that identifier.
+    As with a switch statement, a goto statement cannot transfer control from a
+    point where an initialized variable is out of scope to a point where that
+    variable is in scope.]
+ * In almost all cases, using goto statements is considered to be bad practice,
+   as they make programs hard to understand and hard to modify.
+   But, in some very specific cases, using a goto statement can make the code
+   simpler, such as when we want to get out of deeply nested loops quickly.
+   Without a goto statement, getting out of deeply nested loops requires the
+   usage of boolean flags in every loop and multiple break statements.
+
+
+ * Add stuff from 5.6 try Blocks and Exception Handling later.
 
  * End of Trivia */
