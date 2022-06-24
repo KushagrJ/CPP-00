@@ -558,15 +558,24 @@ int main()
     expression can also be empty.]
 
  * A range-based for statement can be used to iterate over the elements of a
-   sequence, and has the following syntactic form :-
+   container (or std::string), and has the following syntactic form :-
    for (definition : expression)
        statement // simple, compound, etc.
    [definition defines a variable. It must be possible to convert each element
-    of the sequence to the variable's type. The easiest way to ensure that the
-    types match is to use the auto type specifier.
-    expression must be a sequence, i.e. either be a braced initializer list, an
-    array, or an object of a type such as std::vector or std::string that has
-    begin and end member functions that return iterators.]
+    of the container (or std::string) to the variable's type. The easiest way to
+    ensure that the types match is to use the auto type specifier.
+    expression must either be a braced initializer list, an array, or an object
+    of a type such as std::vector or std::string that has begin and end member
+    functions that return iterators.]
+   [Containers may be sequences (called sequence containers) or may not be
+    sequences (for eg., associative containers, unordered associative containers
+    and container adaptors).
+    std::string's are sequences and also support iterators, even though they
+    aren't containers.]
+   [A range-based for statement also works with containers that aren't
+    sequences, but support iterators (i.e. have begin and end member functions
+    that return iterators). For eg., associative containers and unordered
+    associative containers.]
    [For eg., for (auto& r : v)
                  r *= 2;
     is equivalent to
@@ -575,9 +584,9 @@ int main()
                  auto& r = *(beg);
                  r *= 2;
              }
-    Thus, the body of a range-based for must not change the size of the sequence
-    over which it is iterating, since the value of end() is cached, and the
-    value of the iterator end might get invalidated.]
+    Thus, the body of a range-based for must not change the size of the
+    container (or std::string) over which it is iterating, since the value of
+    end() is cached, and the value of the iterator end might get invalidated.]
 
  * A do-while statement has the following syntactic form :-
    do
@@ -605,7 +614,7 @@ int main()
    the condition. In a traditional for loop, execution continues at the
    expression inside the for header. In a range-based for loop, execution
    continues by initializing the control variable from the next element in the
-   sequence.
+   container (or std::string).
 
  * A goto statement provides an unconditional jump from the goto to another
    statement in the same function and has the following syntactic form :-
@@ -630,6 +639,110 @@ int main()
 
 
  * A 'function' is a block of code, i.e. a compound statement, with a name.
-   We execute the code by calling the function.
+   We execute the block of code by calling the function.
+
+ * A function definition typically consists of a return type, a name, a list of
+   zero or more parameters, and a body.
+   The parameters are specified in a comma-separated list enclosed in
+   parentheses.
+   The actions that the function performs are specified in the block of code
+   referred to as the function body.
+
+ * We execute a function through the call operator, which is a pair of
+   parentheses.
+   The call operator takes an expression that is a function or a pointer to a
+   function.
+   Inside the parentheses is a comma-separated list of arguments.
+   The arguments are used to initialize the function's parameters.
+   The type of a function call expression is the return type of that function.
+ * Alongwith initializing a function's parameters from the corresponding
+   arguments, a function call transfers control to that function.
+   Thus, the execution of the calling function is suspended and the execution of
+   the called function begins.
+   The execution of the called function ends when a return statement is
+   encountered.
+   Alongwith returning a value (if any), a return statement transfers control
+   out of the called function back to the calling function.
+   The value returned by a function is the value of the corresponding function
+   call expression.
+   [The main() function is called by the operating system after taking some
+    initial steps to set things up, such as initializing static objects.]
+
+ * The execution of a function begins with the (implicit) definition and
+   initialization of its parameters.
+   These parameters are local to the function.
+   For eg., ...
+            int main()
+            {
+                int x;
+                foo(x);
+                ...
+            }
+            ...
+            void foo(int x)
+            {
+                ...
+            }
+   Here, the local variable x of main() is different from the local variable x
+   of foo().
+   Since a compound statement, or a block, introduces a scope, therefore the
+   same names of the two variables don't conflict with each other.
+
+ * Arguments are the initializers for a function's parameters.
+   The first argument is used to initialize the first parameter, the second
+   argument is used to initialize the second parameter, and so on.
+   But, the order in which the arguments are evaluated (before their values are
+   passed to the called function) is unspecified. The compiler is free to
+   evaluate the arguments in whatever order it prefers.
+   For eg., int x = 1, y = 2;
+            foo(x, x + y);
+   Here, it isn't known whether the expression x will be evaluated first, or
+   the expression x + y will be evaluated first.
+   Thus, function calls like printf("%d %d\n", i, i++) invoke undefined
+   behaviour.
+ * The type of each argument must match, or must be convertible to, the type of
+   the corresponding parameter in the same way that the type of an initializer
+   must match, or must be convertible to, the type of the variable it
+   initializes.
+ * We must pass exactly the same number of arguments as the function has
+   parameters.
+   Since every call is guaranteed to pass as many arguments as the function has
+   parameters, therefore parameters are always initialized.
+
+ * A function's parameter list can be empty but cannot be omitted.
+   A function with no parameters can be defined by writing an empty parameter
+   list.
+   For compatibility with C, we can also use void to indicate that there are no
+   parameters.
+ * Even when the types of multiple parameters are the same, the type must be
+   repeated.
+   For eg., void foo(int x, y, z) is an invalid function header, whreeas
+   void foo(int x, int y, int z) is a valid one.
+ * No two parameters can have the same name.
+   Moreover, local variables at the outermost scope of a function cannot use the
+   same name as any parameter.
+   For eg., void foo(int x)
+            {
+                int x = 10;
+            }
+   results in an error.
+
+ * As opposed to in C, where parameter names are optional only in function
+   prototypes, parameter names in C++ are optional in function definitions as
+   well, in addition to in function prototypes.
+   However, there is no way to use an unnamed parameter.
+   Thus, parameters in C++ ordinarily have names.
+   [Occasionally, a function has a parameter that is not used. Such parameters
+    are often left unnamed, to indicate that they aren't used.]
+ * Leaving a parameter unnamed doesn't change the number of arguments that a
+   call must supply.
+   A call must suppy an argument for every parameter, even if that parameter
+   isn't used.
+
+ * Most types can be used as the return type of a function.
+   However, the return type cannot be an array type or a function type.
+   But, a function may return a pointer to an array or a function.
+
+ * Resume from 6.1.1 Local Objects
 
  * End of Trivia */

@@ -311,8 +311,8 @@ int main()
    int variable named x and initialize it to 10:
    int x = 10;
    int x = {10};
-   int x{10};
-   int x(10);
+   int x{10}; // doesn't work in C
+   int x(10); // doesn't work in C
    [The generalized form of curly braces for initialization is referred to as
     'list initialization']
  * When used with variables of built-in types, list initialization has one
@@ -977,8 +977,8 @@ int main()
 
  * The range-based for statement can be used to process every element in an
    std::vector as well.
- * The body of a range-based for must not change the size of the sequence over
-   which it is iterating.
+ * The body of a range-based for must not change the size of the container
+   (or std::string) over which it is iterating.
    For eg., the body of a range-based for must not add elements to an
    std::vector.
 
@@ -1191,15 +1191,16 @@ int main()
    copy, making i++ the same as ++i when used by themselves in a statement.
 
 
- * Iteration using 'range-based for' must not change the size of the sequence
-   being iterated over. This is because upon adding/removing elements, the value
-   of a.end() might get invalidated, among other things.
+ * Iteration using 'range-based for' must not change the size of the container
+   (or std::string) being iterated over. This is because upon adding/removing
+   elements, the value of a.end() might get invalidated, among other things.
    If this happens, undefined behaviour gets invoked.
  * A range-based for is basically equivalent to
    for (auto begin = a.begin(), end = a.end(); begin != end; (begin)++)
 
- * Although we may change the size of the sequence being iterated over when
-   iterating using 'iterators', this should be done very carefully.
+ * Although we may change the size of the container (or std::string) being
+   iterated over when iterating using 'iterators', this should be done very
+   carefully.
    This is because code that adds or removes elements to a sequence can
    invalidate iterators.
    Thus, we need to ensure that the iterators are repositioned, as appropriate,

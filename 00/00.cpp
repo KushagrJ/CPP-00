@@ -11,8 +11,7 @@ int main()
     std::cout << "Enter two integers: ";
     std::cin >> a >> b;
 
-    std::cout << "The sum of " << a << " and " << b << " is " << (a + b)
-              << std::endl;
+    std::cout << "Their sum is " << (a + b) << std::endl;
 
     return 0;
 
@@ -25,7 +24,7 @@ int main()
 /* Output - 00.cpp
 
    Enter two integers: 2 5
-   The sum of 2 and 5 is 7
+   Their sum is 7
 
  * End of Output */
 
