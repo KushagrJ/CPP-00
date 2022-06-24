@@ -448,16 +448,18 @@ int main()
    const-qualified.
 
 
- * Built-in types are also known as primitive/fundamental types.
+ * Built-in types generally refer to the types built-in to the language, such
+   as int (fundamental type), char (fundamental type), int* (compound type),
+   char& (compound type), etc.
  * A 'compound' type is a type that is defined in terms of another type
-   (built-in or compound). For eg., arrays, functions (return type and types of
-   parameters), pointers, references, classes, etc. are all compound types.
- * Any type that is not a built-in type is a compound type.
+   (fundamental or compound). For eg., arrays, functions (return type and types
+   of parameters), pointers, references, classes, etc. are all compound types.
+ * Any type that is not a fundamental type is a compound type.
 
 
- * A 'declaration' is a base type (built-in or compound) followed by a list of
-   'declarators'. Each declarator names a variable and gives the variable a type
-   that is related to the base type.
+ * A 'declaration' is a base type (fundamental or compound) followed by a list
+   of 'declarators'. Each declarator names a variable and gives the variable a
+   type that is related to the base type.
    [Every definition is a declaration as well]
  * An 'lvalue reference', or simply 'reference', defines an alternative name
    for an object. A reference type 'refers to' another type. A reference must be
@@ -710,11 +712,8 @@ int main()
  * The preprocessor works in the same way in C++ as it does in C.
 
 
- * Built-in/fundamental/primitive types - int, char, float, etc.
+ * Fundamental/primitive types - int, char, float, etc.
    Compound types - array, pointer, reference, class, etc.
- * Arrays are not built-in types.
-   Arrays are compound types, and the term 'built-in' is an informal name for a
-   fundamental type.
 
  * An abstract data type (ADT) is simply the description of a type. But, once
    that type has been implemented in a language, it no longer remains an ADT,

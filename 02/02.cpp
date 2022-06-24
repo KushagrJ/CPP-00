@@ -685,7 +685,7 @@ int main()
             }
    Here, the local variable x of main() is different from the local variable x
    of foo().
-   Since a compound statement, or a block, introduces a scope, therefore the
+   Since a compound statement, or a block, introduces a new scope, therefore the
    same names of the two variables don't conflict with each other.
 
  * Arguments are the initializers for a function's parameters.
@@ -743,6 +743,29 @@ int main()
    However, the return type cannot be an array type or a function type.
    But, a function may return a pointer to an array or a function.
 
- * Resume from 6.1.1 Local Objects
+
+ * Names have 'scope' and objects have 'lifetimes' (or storage durations).
+   The scope of a name is the part of the program's text in which that name is
+   visible.
+   The lifetime of an object is the time during the program's execution that the
+   object exists.
+ * Thus, since the body of a function is a block and a block introduces a new
+   scope, therefore variables defined inside a function body and a function's
+   parameters are referred to as 'local variables'.
+
+ * Objects defined outside of any function exist throughout the program's
+   execution.
+   Such objects are created when the program starts and are not destroyed until
+   the program ends.
+   The names of such objects have global scope, i.e. they are visible throughout
+   the program's text.
+   Such objects are also referred to as 'global variables'.
+   If a global variable has no explicit initializer, then it is value
+   initialized, meaning that global variables of built-in type are initialized
+   to zero.
+
+ * Local variables are created when the function's control path passes through
+   the variable's definition.
+   They are destroyed
 
  * End of Trivia */
