@@ -785,6 +785,17 @@ int main()
  * A local (based on scope) and static (based on lifetime / storage duration)
    object can be obtained by defining a local variable as 'static'.
    Such a variable's lifetime continues across calls to the function.
-   Each local static variable
+   Each local static variable is initialized before the first time execution
+   passes through the object's definition.
+   Like global variables, such objects are not destroyed until the program ends.
+   When a function containing the definition of a local static variable is
+   called multiple times, then only the first definition is considered, and the
+   subsequent definitions are discarded.
+   Like global variables, if a local static variable has no explicit
+   initializer, then it is value initialized, meaning that local static
+   variables of built-in type are initialized to zero.
+ * Global variables are also static (based on lifetime / storage duration).
+
+ * Resume from 6.1.2 Function Declarations
 
  * End of Trivia */
