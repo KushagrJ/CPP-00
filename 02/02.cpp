@@ -751,7 +751,7 @@ int main()
    object exists.
  * Thus, since the body of a function is a block and a block introduces a new
    scope, therefore variables defined inside a function body and a function's
-   parameters are referred to as 'local variables'.
+   parameters are referred to as 'local' variables (based on scope).
 
  * Objects defined outside of any function exist throughout the program's
    execution.
@@ -759,13 +759,32 @@ int main()
    the program ends.
    The names of such objects have global scope, i.e. they are visible throughout
    the program's text.
-   Such objects are also referred to as 'global variables'.
+   Such objects are also referred to as 'global' variables (based on scope).
    If a global variable has no explicit initializer, then it is value
    initialized, meaning that global variables of built-in type are initialized
    to zero.
 
  * Local variables are created when the function's control path passes through
    the variable's definition.
-   They are destroyed
+   They are destroyed when control passes through the end of the block in which
+   the variable is defined.
+   Such objecs that exist only while a block is executing are known as
+   'automatic' objects (based on lifetime / storage duration).
+   If the value of an automatic object is accessed after the execution exits the
+   corresponding block (through a pointer or some other means), then undefined
+   behaviour gets invoked.
+   [Similar rules apply to the variables defined inside other kinds of blocks]
+ * Parameters are automatic objects. Storage for the parameters is allocated
+   when the function begins, and they are destroyed when the function
+   terminates.
+ * Parameters are initialized by the arguments passed to the function.
+   If a local variable has no explicit initializer, then it is default
+   initialized, meaning that local variables of built-in type have undefined
+   values.
+
+ * A local (based on scope) and static (based on lifetime / storage duration)
+   object can be obtained by defining a local variable as 'static'.
+   Such a variable's lifetime continues across calls to the function.
+   Each local static variable
 
  * End of Trivia */

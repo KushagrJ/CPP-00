@@ -39,6 +39,11 @@ int main()
    constructed over memory.
    In other words, in C, an object 'is' a region of storage, whereas in C++, an
    object 'occupies' a region of storage.
+   [This is the reason why pre-C++20, using only malloc to allocate memory and
+    attempting to use the supposed object at the allocated memory invokes
+    undefined behaviour, as malloc only allocates memory and doesn't actually
+    construct an object in C++]
+   [https://stackoverflow.com/questions/63379066]
  * The term 'variable' (in relation with objects and identifiers) exists in C++,
    but not in C.
    C++ programmers tend to refer to variables as 'variables' or 'objects'
