@@ -20,6 +20,8 @@ int main()
         std::vector<int> v(n);
         std::unordered_set<int> s;
 
+        bool array_to_be_processed = true;
+
         for (int i = 0; i < n; i++)
         {
             std::cin >> v[i];
@@ -27,28 +29,32 @@ int main()
             if ((n >= 5) && (v[i] != 0))
             {
                 std::cout << "NO\n";
-                goto end_of_loop;
+                array_to_be_processed = false;
+                break;
             }
 
             s.insert(v[i]);
         }
 
-        for (int i = 0; i < n; i++)
+        if (array_to_be_processed)
         {
-            for (int j = (i + 1); j < n; j++)
+            for (int i = 0; i < n; i++)
             {
-                for (int k = (j + 1); k < n; k++)
+                for (int j = (i + 1); j < n; j++)
                 {
-                    if (s.find(v[i] + v[j] + v[k]) == s.end())
+                    for (int k = (j + 1); k < n; k++)
                     {
-                        std::cout << "NO\n";
-                        goto end_of_loop;
+                        if (s.find(v[i] + v[j] + v[k]) == s.end())
+                        {
+                            std::cout << "NO\n";
+                            goto end_of_loop;
+                        }
                     }
                 }
             }
-        }
 
-        std::cout << "YES\n";
+            std::cout << "YES\n";
+        }
 
         end_of_loop: ;
     }
