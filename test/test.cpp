@@ -17,27 +17,63 @@ int main()
         int n;
         std::cin >> n;
 
-        std::vector<int> v(n);
-        std::unordered_set<int> s;
+        std::vector<long long> v(n);
 
-        bool array_to_be_processed = true;
+        int no_of_positives = 0;
+        int no_of_zeroes = 0;
+        int no_of_negatives = 0;
+
+        int positive, negative;
 
         for (int i = 0; i < n; i++)
         {
             std::cin >> v[i];
 
-            if ((n >= 5) && (v[i] != 0))
-            {
-                std::cout << "NO\n";
-                array_to_be_processed = false;
-                break;
-            }
-
-            s.insert(v[i]);
+            if (v[i] > 0)
+                ++(no_of_positives), (positive = v[i]);
+            else if (v[i] == 0)
+                ++(no_of_zeroes);
+            else
+                ++(no_of_negatives), (negative = v[i]);
         }
 
-        if (array_to_be_processed)
+        if ((no_of_positives >= 3) || (no_of_negatives >= 3))
         {
+            std::cout << "NO\n";
+        }
+
+        else if ((no_of_positives == 1) && (no_of_negatives == 1))
+        {
+            if (positive == -(negative))
+                std::cout << "YES\n";
+            else
+                std::cout << "NO\n";
+        }
+
+        else if ((no_of_positives == 1) && (no_of_negatives == 2) &&
+                    (no_of_zeroes > 0))
+        {
+            std::cout << "NO\n";
+        }
+
+        else if ((no_of_positives == 2) && (no_of_negatives == 1) &&
+                    (no_of_zeroes > 0))
+        {
+            std::cout << "NO\n";
+        }
+
+        else if ((no_of_positives == 2) && (no_of_negatives == 2) &&
+                    (no_of_zeroes > 0))
+        {
+            std::cout << "NO\n";
+        }
+
+        else
+        {
+            std::unordered_set<long long> s;
+            for (int i = 0; i < n; i++)
+                s.insert(v[i]);
+
             for (int i = 0; i < n; i++)
             {
                 for (int j = (i + 1); j < n; j++)
@@ -54,9 +90,9 @@ int main()
             }
 
             std::cout << "YES\n";
-        }
 
-        end_of_loop: ;
+            end_of_loop: ;
+        }
     }
 
     return 0;
